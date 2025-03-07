@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->foreignId('prioridad_id')->nullable()->constrained('prioridades')->onDelete('cascade');
             $table->foreignId('sede_id')->constrained('sedes')->onDelete('cascade');
             $table->string('descripcion');
+            $table->text('resolucion')->nullable();
             $table->timestamp('fecha_creacion')->useCurrent();
             $table->timestamp('fecha_resolucion')->nullable();
             $table->timestamps();

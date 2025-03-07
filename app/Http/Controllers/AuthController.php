@@ -28,16 +28,16 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             $user = Auth::user();
-            $username = $user->username;
-            $rol_id = $user->rol_id;
-            session()->flash('success', "Bienvenido $username!");
+            // $username = $user->username;
+            $rol_id = $user->role_id;
+            // session()->flash('success', "Bienvenido $username!");
 
             if ($rol_id == 1) {
-                return redirect()->route('home');
+                return redirect()->route('dashboard');
             } else if ($rol_id == 2) {
-                return redirect()->route('');
+                return redirect()->route('dashboard');
             } else if ($rol_id == 3) {
-                return redirect()->route('');
+                return redirect()->route('dashboard');
             } else if ($rol_id == 4) {
                 return redirect()->route('dashboard');
             }
