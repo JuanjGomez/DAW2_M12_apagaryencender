@@ -9,6 +9,7 @@ class SedesTableSeeder extends Seeder
 {
     public function run()
     {
+        // Crear sedes
         DB::table('sedes')->insert([
             [
                 'nombre' => 'Barcelona',
