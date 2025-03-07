@@ -12,14 +12,16 @@
         @csrf
         <div>
             <label for="email">Email:</label>
-            <input type="email" name="email" required>
+            <input type="email" name="email" id="email">
+            <span id="email-error" class="error"></span>
         </div>
         <div>
             <label for="password">Password:</label>
-            <input type="password" name="password" required>
+            <input type="password" name="password" id="password">
+            <span id="password-error" class="error"></span>
         </div>
         <div>
-            <button type="submit">Login</button>
+            <button type="submit" id="btnSesion" disabled>Entrar</button>
         </div>
         @if ($errors->any())
             <div>
@@ -27,5 +29,6 @@
             </div>
         @endif
     </form>
+    <script src="{{ asset('js/validacionLogin.js') }}"></script>
 </body>
 </html>

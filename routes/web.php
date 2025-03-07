@@ -22,7 +22,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Rutas securizadas ------------------------------------------------------------------------------------------------------
 Route::middleware(['auth'])->group(function () {
     // Principal
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
 });
 // ------------------------------------------------------------------------------------------------------------------------
