@@ -13,10 +13,12 @@ return new class extends Migration {
             $table->string('password');
             $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
             $table->foreignId('sede_id')->constrained('sedes')->onDelete('cascade');
+            $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
     }
+    
 
     public function down(): void {
         Schema::dropIfExists('users');

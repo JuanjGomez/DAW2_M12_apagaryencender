@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->string('nombre');
             $table->string('direccion');
             $table->string('ciudad');
+            $table->string('pais');
             $table->timestamps();
         });
     }
