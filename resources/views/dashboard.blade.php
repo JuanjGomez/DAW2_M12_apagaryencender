@@ -6,8 +6,9 @@
     <title>Dashboard - Sistema de Incidencias</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js" integrity="sha256-lCHT/LfuZjRp+PdpWns/vKrnSn367D/g1E6Ju18wiH0=" crossorigin="anonymous"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100" data-login-message="{{ session('loginSuccess') }}">
     <div class="min-h-screen">
         <!-- Navbar -->
         <nav class="bg-white shadow-lg">
@@ -32,7 +33,7 @@
         <!-- Contenido principal -->
         <main class="max-w-7xl mx-auto py-6 px-4">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Panel de Control</h2>
-            
+
             <!-- Aquí irá el contenido del dashboard -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Tarjeta de estadísticas -->
@@ -45,5 +46,7 @@
             </div>
         </main>
     </div>
+    <script src="{{ asset('js/toolsDashboard.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 </body>
-</html> 
+</html>

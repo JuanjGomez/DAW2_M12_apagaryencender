@@ -1,0 +1,85 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.glass-effect {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.container-shadow {
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.2),
+                0 0 100px rgba(103, 126, 234, 0.3),
+                0 0 150px rgba(118, 75, 162, 0.2);
+}
+
+.input-focus:focus {
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5);
+}
+
+#btnSesion {
+    background-color: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+#btnSesion:hover {
+    background-color: #4c51bf;
+}
+
+#btnSesion:disabled {
+    background-color: #667eea;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.error {
+    color: red;
+    font-size: 12px !important;
+    font-weight: bold;
+}
+
+@media (max-width: 430px) {
+    .container-shadow {
+        margin: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .glass-effect {
+        padding: 1.5rem !important;
+    }
+
+    .text-4xl {
+        font-size: 1.875rem !important;
+        line-height: 2.25rem !important;
+    }
+
+    .text-lg {
+        font-size: 1rem !important;
+        line-height: 1.5rem !important;
+    }
+
+    .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+        margin-top: 1.25rem !important;
+    }
+
+    .h-12 {
+        height: 2.75rem !important;
+    }
+
+    .rounded-3xl {
+        border-radius: 1.5rem !important;
+    }
+
+    .mb-10 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .mb-6 {
+        margin-bottom: 1.5rem !important;
+    }
+}

@@ -1,3 +1,4 @@
+// Validaciones del formulario ----------------------------------------------------------------
 document.getElementById('email').oninput = function() {
     let email = this.value.trim()
     let emailError = ""
@@ -48,12 +49,44 @@ function verificarForm() {
 
     document.getElementById('btnSesion').disabled = hayErrores || camposVacios
 }
+// ---------------------------------------------------------------------------------------------
 
-// Muestra el mensaje de error en el formulario
-if(typeof errorMessage !== 'undefined' && errorMessage !== "") {
-    Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: errorMessage,
-    })
+// Manejo de alerts ----------------------------------------------------------------------------
+function obtenerMensajesSesion() {
+    const body = document.body;
+    return {
+        error: body.dataset.error,
+        success: body.dataset.success,
+        validationErrors: body.dataset.validationErrors
+    }
 }
+
+function mostrarMensajes() {
+    const { error, validationErrors } = obtenerMensajesSesion();
+
+    if (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de acceso',
+            text: error,
+            confirmButtonColor: '#3B82F6',
+            confirmButtonText: 'Intentar de nuevo'
+        })
+    }
+
+    if(validationErrors) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de validación',
+            text: validationErrors,
+            confirmButtonColor: '#3B82F6',
+            confirmButtonText: 'Intentar de nuevo'
+        })
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    mostrarMensajes()
+})
+
+// ---------------------------------------------------------------------------------------------
