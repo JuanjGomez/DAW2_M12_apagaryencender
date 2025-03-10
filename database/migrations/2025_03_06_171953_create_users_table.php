@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->date('final_contrato')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
+            $table->enum('estado', ['activo', 'inactivo', 'pendiente']);
             $table->timestamps();
         });
     }
