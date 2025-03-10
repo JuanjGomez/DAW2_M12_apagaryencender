@@ -4,23 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    public function up(): void
-    {
+return new class extends Migration {
+    public function up(): void {
         Schema::create('sede_tecnico', function (Blueprint $table) {
-            // Eliminamos la columna 'id', ya que no la necesitamos
+            $table->id(); // ID autoincremental
             $table->foreignId('sede_id')->constrained('sedes')->onDelete('cascade');
             $table->foreignId('tecnico_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
 
-            // Establecemos la clave primaria compuesta por 'sede_id' y 'tecnico_id'
-            $table->primary(['sede_id', 'tecnico_id']);
+            $table->unique(['sede_id', 'tecnico_id']); // Evita duplicados sin ser clave primaria compuesta
         });
     }
 
-    public function down(): void
-    {
+    public function down(): void {
         Schema::dropIfExists('sede_tecnico');
     }
 };

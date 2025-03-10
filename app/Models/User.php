@@ -11,7 +11,7 @@ class User extends Authenticatable {
 
     protected $table = 'users';
 
-    protected $fillable = ['name', 'email', 'password', 'role_id', 'sede_id'];
+    protected $fillable = ['name', 'email', 'password', 'role_id', 'jefe_id', 'sede_id'];
 
     // Relación con el rol del usuario (administrador, cliente, técnico, etc.)
     public function role() {
@@ -36,5 +36,15 @@ class User extends Authenticatable {
     // Relación muchos a muchos con las sedes para los técnicos (un técnico puede estar asignado a muchas sedes)
     public function sedes() {
         return $this->belongsToMany(Sede::class, 'sede_tecnico', 'tecnico_id', 'sede_id');
+    }
+
+    // Relación con el jefe (usuario que supervisa a este usuario)
+    public function jefe() {
+        return $this->belongsTo(User::class, 'jefe_id');
+    }
+
+    // Relación con los empleados supervisados por este usuario
+    public function empleados() {
+        return $this->hasMany(User::class, 'jefe_id');
     }
 }
