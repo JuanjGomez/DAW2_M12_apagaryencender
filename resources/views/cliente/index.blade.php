@@ -15,6 +15,7 @@
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
+                        <img src="{{ asset('img/adje.png') }}" alt="Logo" class="h-10 mr-4">
                         <h1 class="text-xl font-bold">Sistema de Incidencias</h1>
                     </div>
                     <div class="flex items-center">
@@ -36,13 +37,31 @@
 
             <!-- Estadísticas -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Mis Incidencias -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold mb-2">Mis Incidencias</h3>
                     <p class="text-3xl font-bold text-blue-600">
                         {{ Auth::user()->incidenciasCliente->count() }}
                     </p>
                 </div>
+
+                <!-- Incidencias Pendientes -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-2">Incidencias Pendientes</h3>
+                    <p class="text-3xl font-bold text-yellow-600">
+                        {{ Auth::user()->incidenciasCliente->whereIn('estado_id', [1, 2, 3])->count() }}
+                    </p>
+                </div>
+
+                <!-- Incidencias Resueltas -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-2">Incidencias Resueltas</h3>
+                    <p class="text-3xl font-bold text-green-600">
+                        {{ Auth::user()->incidenciasCliente->where('estado_id', 3)->count() }}
+                    </p>
+                </div>
             </div>
+
 
             <!-- Filtros y tabla de incidencias -->
             <div class="bg-white p-6 mt-6 rounded-lg shadow">
@@ -78,7 +97,6 @@
                 <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
                     <thead>
                         <tr class="bg-gray-100">
-                            <th class="py-2 px-4 text-left">ID</th>
                             <th class="py-2 px-4 text-left">Descripción</th>
                             <th class="py-2 px-4 text-left">Estado</th>
                             <th class="py-2 px-4 text-left">Técnico</th>
@@ -90,7 +108,6 @@
                     <tbody>
                         @foreach($incidencias as $incidencia)
                         <tr class="border-t border-gray-200">
-                            <td class="py-2 px-4">{{ $incidencia->id }}</td>
                             <td class="py-2 px-4">{{ $incidencia->descripcion }}</td>
                             <td class="py-2 px-4">{{ $incidencia->estado->nombre }}</td>
                             <td class="py-2 px-4">

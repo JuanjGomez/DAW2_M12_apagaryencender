@@ -5,27 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat - Incidencia {{ $incidencia->id }}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .chat-container {
-            height: 70vh;
-            overflow-y: scroll;
-        }
-        .message {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 10px;
-            max-width: 60%;
-        }
-        .message.sent {
-            background-color: #DCF8C6;
-            margin-left: auto;
-        }
-        .message.received {
-            background-color: #F1F0F0;
-        }
-    </style>
 </head>
 <body class="bg-gray-100">
+<nav class="bg-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <img src="{{ asset('img/adje.png') }}" alt="Logo" class="h-10 mr-4">
+                        <h1 class="text-xl font-bold">Sistema de Incidencias</h1>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-700 mr-4">Bienvenido, {{ Auth::user()->name }}</span>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="text-red-600 hover:text-red-800">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Cerrar sesión
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </nav>
     <div class="container mx-auto my-10 p-5 bg-white rounded-lg shadow-lg max-w-4xl">
         <!-- Título del chat -->
         <h2 class="text-2xl font-semibold mb-4">Chat - Incidencia #{{ $incidencia->id }}</h2>

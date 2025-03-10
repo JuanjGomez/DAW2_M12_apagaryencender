@@ -15,6 +15,7 @@
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
+                        <img src="{{ asset('img/adje.png') }}" alt="Logo" class="h-10 mr-4">
                         <h1 class="text-xl font-bold">Sistema de Incidencias</h1>
                     </div>
                     <div class="flex items-center">
