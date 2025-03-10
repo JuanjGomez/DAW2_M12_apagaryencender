@@ -36,7 +36,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Rutas para gestor
     Route::get('/gestor', function () {
-        $incidencias = Auth::user()->sede->incidencias;
+        $incidencias = Auth::user()->sede->incidencias()
+            ->with(['cliente', 'tecnico', 'estado', 'prioridad'])
+            ->get();
         return view('gestor.index', compact('incidencias'));
     })->name('gestor.index');
 

@@ -13,4 +13,14 @@ class Sede extends Model {
     public function incidencias() {
         return $this->hasMany(Incidencia::class);
     }
+
+    public function gestor() {
+        return $this->belongsTo(User::class, 'gestor_id')
+                    ->where('role_id', 3); // role_id 3 corresponde a gestores
+    }
+
+    public function tecnicos() {
+        return $this->hasMany(User::class)
+                    ->where('role_id', 2); // role_id 2 corresponde a técnicos
+    }
 }
