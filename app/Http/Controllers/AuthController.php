@@ -37,12 +37,12 @@ class AuthController extends Controller
             switch ($role_id) {
                 case 1: // Administrador
                     return redirect()->route('admin.index');
-                case 2: // Cliente
-                    return redirect()->route('cliente.index');
+                case 2: // Tecnico
+                    return redirect()->route('tecnico.index');
                 case 3: // Gestor
                     return redirect()->route('gestor.index');
-                case 4: // Técnico
-                    return redirect()->route('tecnico.index');
+                case 4: // Cliente
+                    return redirect()->route('cliente.index');
                 default:
                     return redirect()->route('login');
             }
@@ -103,7 +103,7 @@ class AuthController extends Controller
             return back()->withInput();
         }
     }
-    
+
     public function logout(Request $request)
     {
         Auth::logout();

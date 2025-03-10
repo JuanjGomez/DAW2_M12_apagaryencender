@@ -22,6 +22,13 @@
                 <a href="#" class="block py-2.5 px-4 hover:bg-blue-700">
                     <i class="fas fa-history mr-2"></i>Historial
                 </a>
+                <form action="{{ route('logout') }}" method="POST" class="w-full">
+                    @csrf
+                    <button type="submit" class="w-full flex items-center gap-2 p-4 hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-sign-out-alt text-red-500 text-xl"></i>
+                        <span class="text-red-500 text-xl">Cerrar sesión</span>
+                    </button>
+                </form>
             </nav>
         </aside>
 
@@ -81,7 +88,7 @@
                                 </select>
                             </td>
                             <td class="px-6 py-4">
-                                <span class="px-2 py-1 rounded-full text-xs 
+                                <span class="px-2 py-1 rounded-full text-xs
                                     {{ $incidencia->prioridad_id == 1 ? 'bg-red-100 text-red-800' : '' }}
                                     {{ $incidencia->prioridad_id == 2 ? 'bg-yellow-100 text-yellow-800' : '' }}
                                     {{ $incidencia->prioridad_id == 3 ? 'bg-green-100 text-green-800' : '' }}">
@@ -89,11 +96,11 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 space-x-2">
-                                <button class="text-blue-600 hover:text-blue-800" 
+                                <button class="text-blue-600 hover:text-blue-800"
                                         onclick="verDetalles({{ $incidencia->id }})">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                <button class="text-green-600 hover:text-green-800" 
+                                <button class="text-green-600 hover:text-green-800"
                                         onclick="resolverIncidencia({{ $incidencia->id }})">
                                     <i class="fas fa-check-circle"></i>
                                 </button>
@@ -106,4 +113,4 @@
         </main>
     </div>
 </body>
-</html> 
+</html>

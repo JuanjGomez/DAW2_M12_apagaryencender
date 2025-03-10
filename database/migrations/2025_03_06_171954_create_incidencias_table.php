@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->foreignId('sede_id')->constrained('sedes')->onDelete('cascade');
             $table->string('descripcion');
             $table->text('resolucion')->nullable();
+            $table->string('imagen')->nullable();
             $table->timestamp('fecha_creacion')->useCurrent();
             $table->timestamp('fecha_resolucion')->nullable();
             $table->timestamps();

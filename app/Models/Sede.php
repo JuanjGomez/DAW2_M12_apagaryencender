@@ -13,9 +13,4 @@ class Sede extends Model {
     public function incidencias() {
         return $this->hasMany(Incidencia::class);
     }
-
-    public function tecnicos()
-    {
-        return $this->belongsToMany(User::class, 'sede_tecnico', 'sede_id', 'tecnico_id');
-    }
 }
