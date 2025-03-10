@@ -35,12 +35,22 @@ class ClienteController extends Controller
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
         ]);
     
-        // Subir imagen si se ha proporcionado
         if ($request->hasFile('imagen')) {
-            $imagenPath = $request->file('imagen')->store('incidencias', 'public');
+            // Obtener el archivo de la imagen
+            $imagen = $request->file('imagen');
+            
+            // Generar un nombre único para la imagen
+            $nombreImagen = time() . '-' . $imagen->getClientOriginalName();
+        
+            // Mover la imagen a public/img/incidencias
+            $imagen->move(public_path('img/incidencias'), $nombreImagen);
+            
+            // Guardar la ruta relativa en la base de datos (por ejemplo: img/incidencias/imagen123.jpg)
+            $imagenPath = 'img/incidencias/' . $nombreImagen;
         } else {
             $imagenPath = null;
         }
+        
     
         // Obtener el ID de la sede asociada al usuario autenticado
         $sede_id = Auth::user()->sede_id; // Obtener la sede del usuario autenticado

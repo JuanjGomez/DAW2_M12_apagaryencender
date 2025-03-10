@@ -9,7 +9,7 @@ class Incidencia extends Model {
     use HasFactory;
 
     protected $fillable = [
-        'cliente_id', 'tecnico_id', 'categoria_id', 'subcategoria_id','estado_id', 'prioridad_id', 'descripcion', 'fecha_creacion', 'fecha_resolucion', 'sede_id'
+        'cliente_id', 'tecnico_id', 'categoria_id', 'subcategoria_id','estado_id', 'prioridad_id', 'descripcion', 'imagen', 'fecha_creacion', 'fecha_resolucion', 'sede_id'
 ];
 
     public function cliente() {
