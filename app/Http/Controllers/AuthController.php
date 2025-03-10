@@ -29,19 +29,22 @@ class AuthController extends Controller
 
             $user = Auth::user();
             $name = $user->name;
-            $rol_id = $user->role_id;
+            $role_id = $user->role_id;
 
-            // Guardamos el mensaje en la sesión
             session()->flash('loginSuccess', "¡Bienvenido $name!");
 
-            if ($rol_id == 1) {
-                return redirect()->route('dashboard');
-            } else if ($rol_id == 2) {
-                return redirect()->route('dashboard');
-            } else if ($rol_id == 3) {
-                return redirect()->route('dashboard');
-            } else if ($rol_id == 4) {
-                return redirect()->route('dashboard');
+            // Redirigir según el rol
+            switch ($role_id) {
+                case 1: // Administrador
+                    return redirect()->route('admin.index');
+                case 2: // Cliente
+                    return redirect()->route('cliente.index');
+                case 3: // Gestor
+                    return redirect()->route('gestor.index');
+                case 4: // Técnico
+                    return redirect()->route('tecnico.index');
+                default:
+                    return redirect()->route('login');
             }
         }
 
@@ -101,7 +104,8 @@ class AuthController extends Controller
         }
     }
     
-    public function Logout(Request $request){
+    public function logout(Request $request)
+    {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
