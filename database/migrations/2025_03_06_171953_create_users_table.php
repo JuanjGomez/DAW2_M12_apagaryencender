@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
             $table->foreignId('sede_id')->constrained('sedes')->onDelete('cascade');
             $table->foreignId('jefe_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->date('final_contrato')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->enum('estado', ['activo', 'inactivo', 'pendiente']);
