@@ -54,10 +54,10 @@
                         <!-- Filtro por estado -->
                         <select name="estado" class="form-select border-gray-300 rounded-md" onchange="this.form.submit()">
                             <option value="">Filtrar por estado</option>
-                            <option value="activo" @if(request('estado') == 'Sin asignar') selected @endif>Sin asignar</option>
-                            <option value="activo" @if(request('estado') == 'activo') selected @endif>Activo</option>
-                            <option value="inactivo" @if(request('estado') == 'inactivo') selected @endif>Inactivo</option>
-                            <option value="pendiente" @if(request('estado') == 'pendiente') selected @endif>Pendiente</option>
+                            <option value="1" @if(request('estado_id') == '1') selected @endif>Sin asignar</option>
+                            <option value="2" @if(request('estado_id') == '2') selected @endif>Activo</option>
+                            <option value="3" @if(request('estado_id') == '3') selected @endif>Inactivo</option>
+                            <option value="4" @if(request('estado_id') == '4') selected @endif>Pendiente</option>
                         </select>
 
                         <!-- Filtro por "resueltas" -->

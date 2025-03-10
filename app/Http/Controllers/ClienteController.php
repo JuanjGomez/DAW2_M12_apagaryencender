@@ -78,29 +78,31 @@ class ClienteController extends Controller
     // Muestra las incidencias del cliente
     public function index(Request $request)
     {
+        // Empezamos la consulta filtrando por el cliente autenticado
         $query = Incidencia::where('cliente_id', Auth::id());
-
-        // Filtro por estado
-        if ($request->has('estado') && in_array($request->estado, ['activo', 'inactivo', 'pendiente'])) {
-            $query->where('estado', $request->estado);
+    
+        // Filtro por estado (usando estado_id)
+        if ($request->has('estado') && in_array($request->estado, [1, 2, 3])) { // Suponiendo que los estados tienen ID: 1 = activo, 2 = inactivo, 3 = pendiente
+            $query->where('estado_id', $request->estado);
         }
-
-        // Filtro por incidencias resueltas (excluirlas)
+    
+        // Filtro por incidencias no resueltas (excluir las resueltas)
         if ($request->has('resueltas') && $request->resueltas == 'no') {
-            $query->where('estado', '!=', 'resuelta');
+            $query->whereNull('fecha_resolucion');
         }
-
-        // Filtro de ordenación por fecha
+    
+        // Filtro de ordenación por fecha de creación
         if ($request->has('orden')) {
             $query->orderBy('fecha_creacion', $request->orden);
         }
-
+    
         // Obtener las incidencias filtradas
         $incidencias = $query->get();
-
+    
         // Pasar las incidencias a la vista
         return view('cliente.index', compact('incidencias'));
     }
+    
 
     // Mostrar detalles de una incidencia
     public function show($id)
