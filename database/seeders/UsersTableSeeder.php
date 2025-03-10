@@ -10,8 +10,6 @@ class UsersTableSeeder extends Seeder
 {
     public function run()
     {
-        // Crear usuarios con roles, sede, estado y jefe_id
-
         // Administrador
         User::create([
             'name' => 'Administrador',
