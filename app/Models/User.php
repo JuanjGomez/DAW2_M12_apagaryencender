@@ -33,11 +33,6 @@ class User extends Authenticatable {
         return $this->belongsTo(Sede::class);
     }
 
-    // Relación muchos a muchos con las sedes para los técnicos (un técnico puede estar asignado a muchas sedes)
-    public function sedes() {
-        return $this->belongsToMany(Sede::class, 'sede_tecnico', 'tecnico_id', 'sede_id');
-    }
-
     // Relación con el jefe (usuario que supervisa a este usuario)
     public function jefe() {
         return $this->belongsTo(User::class, 'jefe_id');
