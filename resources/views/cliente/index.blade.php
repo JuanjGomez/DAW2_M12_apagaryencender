@@ -54,6 +54,7 @@
                         <!-- Filtro por estado -->
                         <select name="estado" class="form-select border-gray-300 rounded-md" onchange="this.form.submit()">
                             <option value="">Filtrar por estado</option>
+                            <option value="activo" @if(request('estado') == 'Sin asignar') selected @endif>Sin asignar</option>
                             <option value="activo" @if(request('estado') == 'activo') selected @endif>Activo</option>
                             <option value="inactivo" @if(request('estado') == 'inactivo') selected @endif>Inactivo</option>
                             <option value="pendiente" @if(request('estado') == 'pendiente') selected @endif>Pendiente</option>
@@ -80,7 +81,9 @@
                             <th class="py-2 px-4 text-left">ID</th>
                             <th class="py-2 px-4 text-left">Descripción</th>
                             <th class="py-2 px-4 text-left">Estado</th>
+                            <th class="py-2 px-4 text-left">Técnico</th>
                             <th class="py-2 px-4 text-left">Fecha de Creación</th>
+                            <th class="py-2 px-4 text-left">Fecha de Resolución</th>
                             <th class="py-2 px-4 text-left">Acciones</th>
                         </tr>
                     </thead>
@@ -90,9 +93,22 @@
                             <td class="py-2 px-4">{{ $incidencia->id }}</td>
                             <td class="py-2 px-4">{{ $incidencia->descripcion }}</td>
                             <td class="py-2 px-4">{{ $incidencia->estado->nombre }}</td>
+                            <td class="py-2 px-4">
+                                {{ $incidencia->tecnico ? $incidencia->tecnico->name : 'No asignado' }}
+                            </td>
                             <td class="py-2 px-4">{{ $incidencia->fecha_creacion }}</td>
                             <td class="py-2 px-4">
-                                <a href="{{ route('cliente.show', $incidencia->id) }}" class="text-blue-600 hover:text-blue-800">Ver detalles</a>
+                                {{ $incidencia->fecha_resolucion ?? 'Aún no resuelta' }}
+                            </td>
+                            <td class="py-2 px-4 flex gap-2">
+                                <!-- Botón de chat -->
+                                <a href="{{ route('chat.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                                    <i class="fas fa-comments"></i> Chat
+                                </a>
+                                <!-- Botón de ver detalles -->
+                                <a href="{{ route('cliente.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                    Ver detalles
+                                </a>
                             </td>
                         </tr>
                         @endforeach

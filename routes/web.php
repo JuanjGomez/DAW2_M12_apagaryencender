@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ChatController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,6 +47,8 @@ Route::middleware(['auth'])->group(function () {
 
         // Ruta para ver los detalles de una incidencia
         Route::get('/cliente/{id}', [ClienteController::class, 'show'])->name('cliente.show');
+
+        Route::get('/chat/{incidencia}', [ChatController::class, 'show'])->name('chat.show');
 
     
     // Rutas para gestor
