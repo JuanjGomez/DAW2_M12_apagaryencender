@@ -24,6 +24,13 @@
                 <a href="#" class="block py-2.5 px-4 hover:bg-blue-700">
                     <i class="fas fa-building mr-2"></i>Sedes
                 </a>
+                <form action="{{ route('logout') }}" method="POST" class="w-full">
+                    @csrf
+                    <button type="submit" class="w-full flex items-center gap-2 p-4 hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-sign-out-alt text-red-500 text-xl"></i>
+                        <span class="text-red-500 text-xl">Cerrar sesión</span>
+                    </button>
+                </form>
             </nav>
         </aside>
 
@@ -50,8 +57,8 @@
                         <option value="3">Técnico</option>
                         <option value="4">Cliente</option>
                     </select>
-                    <input type="text" 
-                           placeholder="Buscar usuario..." 
+                    <input type="text"
+                           placeholder="Buscar usuario..."
                            class="border rounded-lg px-3 py-2">
                 </div>
             </div>
@@ -91,4 +98,4 @@
         </main>
     </div>
 </body>
-</html> 
+</html>
