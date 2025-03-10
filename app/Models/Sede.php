@@ -13,4 +13,8 @@ class Sede extends Model {
     public function incidencias() {
         return $this->hasMany(Incidencia::class);
     }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

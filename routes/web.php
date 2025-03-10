@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClienteController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,6 +35,19 @@ Route::middleware(['auth'])->group(function () {
         return view('cliente.index');
     })->name('cliente.index');
 
+        // Ruta para mostrar las incidencias del cliente
+        Route::get('/cliente', [ClienteController::class, 'index'])->name('cliente.index');
+
+        // Ruta para mostrar el formulario de creación de incidencia
+        Route::get('/cliente/create', [ClienteController::class, 'create'])->name('cliente.create');
+
+        // Ruta para almacenar la incidencia creada
+        Route::post('/cliente', [ClienteController::class, 'store'])->name('cliente.store');
+
+        // Ruta para ver los detalles de una incidencia
+        Route::get('/cliente/{id}', [ClienteController::class, 'show'])->name('cliente.show');
+
+    
     // Rutas para gestor
     Route::get('/gestor', function () {
         $incidencias = Auth::user()->sede->incidencias;
