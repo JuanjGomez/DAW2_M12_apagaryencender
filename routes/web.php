@@ -2,8 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\AdminController;
 use App\Models\User;
+use App\Models\Incidencia;
+use App\Models\Mensaje;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -35,6 +39,26 @@ Route::middleware(['auth'])->group(function () {
         return view('cliente.index');
     })->name('cliente.index');
 
+        // Ruta para mostrar las incidencias del cliente
+        Route::get('/cliente', [ClienteController::class, 'index'])->name('cliente.index');
+
+        // Ruta para mostrar el formulario de creación de incidencia
+        Route::get('/cliente/create', [ClienteController::class, 'create'])->name('cliente.create');
+
+        // Ruta para almacenar la incidencia creada
+        Route::post('/cliente', [ClienteController::class, 'store'])->name('cliente.store');
+
+        // Ruta para ver los detalles de una incidencia
+        Route::get('/cliente/{id}', [ClienteController::class, 'show'])->name('cliente.show');
+
+        // Ruta para mostrar el chat de una incidencia
+        Route::get('/chat/{incidencia}', [ChatController::class, 'show'])->name('chat.show');
+
+        // Ruta para almacenar un mensaje en el chat
+        Route::post('/chat/{incidencia}/store', [ChatController::class, 'store'])->name('chat.store');
+
+
+
     // Rutas para gestor
     Route::get('/gestor', function () {
         $incidencias = Auth::user()->sede->incidencias;
@@ -45,5 +69,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tecnico', function () {
         return view('tecnico.index');
     })->name('tecnico.index');
+
 });
 // ------------------------------------------------------------------------------------------------------------------------
