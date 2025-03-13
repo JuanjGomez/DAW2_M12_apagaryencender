@@ -6,11 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Sede;
+use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
+
 class AuthController extends Controller
 {
     public function showLoginForm(){
@@ -23,34 +26,55 @@ class AuthController extends Controller
             'password' => 'required|max:255',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
+        // Verificar si el usuario existe
+        $user = User::where('email', $request->email)->first();
+        
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'No existe un usuario con este correo electrónico.',
+            ])->withInput();
+        }
 
+        // Intentar autenticar
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
 
             $user = Auth::user();
             $name = $user->name;
-            $role_id = $user->role_id;
+            $role = $user->role->nombre;
 
             session()->flash('loginSuccess', "¡Bienvenido $name!");
 
+            Log::info('Usuario autenticado', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'role' => $role
+            ]);
+
             // Redirigir según el rol
-            switch ($role_id) {
-                case 1: // Administrador
+            switch ($role) {
+                case 'administrador':
                     return redirect()->route('admin.index');
-                case 2: // Tecnico
+                case 'tecnico':
                     return redirect()->route('tecnico.index');
-                case 3: // Gestor
+                case 'gestor':
                     return redirect()->route('gestor.index');
-                case 4: // Cliente
+                case 'cliente':
                     return redirect()->route('cliente.index');
                 default:
                     return redirect()->route('login');
             }
         }
 
-        return back()->withErrors([
-            'email' => 'Las credenciales no coinciden con nuestros registros.',
+        // Si la autenticación falló
+        Log::warning('Intento de login fallido', [
+            'email' => $request->email,
+            'user_exists' => $user ? 'yes' : 'no'
         ]);
+
+        return back()->withErrors([
+            'password' => 'La contraseña es incorrecta.',
+        ])->withInput();
     }
 
     public function showRegisterForm(){
@@ -72,21 +96,21 @@ class AuthController extends Controller
                 ]);
             } catch (ValidationException $e) {
                 DB::rollBack();
-                // Si el error es por email duplicado
                 if (isset($e->errors()['email'])) {
                     session()->flash('emailDuplicado', 'Este correo electrónico ya está registrado en el sistema');
                     return back()->withInput();
                 }
-                // Para otros errores de validación
                 return back()->withErrors($e->errors())->withInput();
             }
 
-            // Crear el usuario cliente por defecto
+            $clienteRole = Role::where('nombre', 'cliente')->first();
+
+            // Crear el usuario cliente
             $usuario = User::create([
                 'name' => $request->name,
                 'email'=> $request->email,
                 'password' => Hash::make($request->password),
-                'role_id' => 4,
+                'role_id' => $clienteRole->id,
                 'sede_id' => $request->sede_id,
             ]);
 
@@ -95,10 +119,14 @@ class AuthController extends Controller
             Auth::login($usuario);
             session()->flash('loginSuccess', "¡Bienvenido $username!");
             DB::commit();
-            return redirect()->route('dashboard');
+            return redirect()->route('cliente.index');
 
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Error en registro de usuario', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             session()->flash('error', 'Error al registrar el usuario. Por favor, inténtelo de nuevo.');
             return back()->withInput();
         }
@@ -111,5 +139,4 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect('/');
     }
-
 }

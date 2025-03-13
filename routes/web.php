@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\TecnicoController;
 use App\Models\User;
 use App\Models\Incidencia;
 use App\Models\Mensaje;
@@ -65,9 +66,10 @@ Route::middleware(['auth'])->group(function () {
     })->name('gestor.index');
 
     // Rutas para técnico
-    Route::get('/tecnico', function () {
-        return view('tecnico.index');
-    })->name('tecnico.index');
+    Route::get('/tecnico', [TecnicoController::class, 'index'])->name('tecnico.index');
+    Route::get('/tecnico/incidencia/{incidencia}', [TecnicoController::class, 'mostrarIncidencia'])->name('tecnico.mostrar');
+    Route::post('/tecnico/incidencia/{incidencia}/estado', [TecnicoController::class, 'cambiarEstado'])->name('tecnico.cambiarEstado');
+    Route::post('/tecnico/incidencia/{incidencia}/resolucion', [TecnicoController::class, 'actualizarResolucion'])->name('tecnico.actualizarResolucion');
 
 });
 // ------------------------------------------------------------------------------------------------------------------------

@@ -3,18 +3,22 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Estado;
 
 class EstadosTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('estados')->insert([
-            ['nombre' => 'Sin asignar'],
-            ['nombre' => 'Asignada'],
-            ['nombre' => 'En trabajo'],
-            ['nombre' => 'Resuelta'],
-            ['nombre' => 'Cerrada'],
-        ]);
+        $estados = [
+            ['nombre' => 'Sense assignar'],
+            ['nombre' => 'Assignada'],
+            ['nombre' => 'En treball'],
+            ['nombre' => 'Resolta'],
+            ['nombre' => 'Tancada'],
+        ];
+
+        foreach ($estados as $estado) {
+            Estado::create($estado);
+        }
     }
 }

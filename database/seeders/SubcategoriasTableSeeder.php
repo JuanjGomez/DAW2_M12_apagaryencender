@@ -3,24 +3,51 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Subcategoria;
+use App\Models\Categoria;
 
 class SubcategoriasTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('subcategorias')->insert([
-            // Software
-            ['nombre' => 'Aplicación gestió administrativa', 'categoria_id' => 1],
-            ['nombre' => 'Accés remot', 'categoria_id' => 1],
-            ['nombre' => 'Aplicació de videoconferència', 'categoria_id' => 1],
-            ['nombre' => 'Imatge de projector defectuosa', 'categoria_id' => 1],
+        $softwareId = Categoria::where('nombre', 'Software')->first()->id;
+        $hardwareId = Categoria::where('nombre', 'Hardware')->first()->id;
 
+        $subcategorias = [
+            // Software
+            [
+                'nombre' => 'Aplicació gestió administrativa',
+                'categoria_id' => $softwareId
+            ],
+            [
+                'nombre' => 'Accés remot',
+                'categoria_id' => $softwareId
+            ],
+            [
+                'nombre' => 'Aplicació de videoconferència',
+                'categoria_id' => $softwareId
+            ],
             // Hardware
-            ['nombre' => 'Problema amb el teclat', 'categoria_id' => 2],
-            ['nombre' => 'El ratolí no funciona', 'categoria_id' => 2],
-            ['nombre' => 'Monitor no s\'encén', 'categoria_id' => 2],
-            ['nombre' => 'Imatge de projector defectuosa', 'categoria_id' => 2],
-        ]);
+            [
+                'nombre' => 'Problema amb el teclat',
+                'categoria_id' => $hardwareId
+            ],
+            [
+                'nombre' => 'El ratolí no funciona',
+                'categoria_id' => $hardwareId
+            ],
+            [
+                'nombre' => 'Monitor no s\'encén',
+                'categoria_id' => $hardwareId
+            ],
+            [
+                'nombre' => 'Imatge de projector defectuosa',
+                'categoria_id' => $hardwareId
+            ],
+        ];
+
+        foreach ($subcategorias as $subcategoria) {
+            Subcategoria::create($subcategoria);
+        }
     }
 }
