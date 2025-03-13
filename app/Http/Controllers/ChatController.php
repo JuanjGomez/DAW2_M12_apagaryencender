@@ -2,36 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Incidencia;
+use App\Models\Chat;
 use App\Models\Mensaje;
+use App\Models\Incidencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ChatController extends Controller
-{
-    // Mostrar los mensajes del chat para una incidencia
-    public function show($incidenciaId)
-    {
-        $incidencia = Incidencia::findOrFail($incidenciaId); // Obtener la incidencia
-        $mensajes = Mensaje::where('incidencia_id', $incidenciaId)->get(); // Obtener los mensajes relacionados
+class ChatController extends Controller {
+    public function show($incidenciaId) {
+        $incidencia = Incidencia::with('chat.mensajes.usuario')->findOrFail($incidenciaId);
 
-        return view('chat.show', compact('incidencia', 'mensajes'));
+        if (!$incidencia->chat) {
+            // Si no hay chat, lo creamos
+            $chat = Chat::create(['incidencia_id' => $incidencia->id]);
+            $incidencia->update(['chat_id' => $chat->id]);
+        } else {
+            $chat = $incidencia->chat;
+        }
+
+        return view('chat.show', compact('chat', 'incidencia'));
     }
 
-    // Almacenar un nuevo mensaje en el chat
-    public function store(Request $request, $incidenciaId)
-    {
-        $request->validate([
-            'mensaje' => 'required|string', // Validar el mensaje
-        ]);
+    public function enviarMensaje(Request $request, $chatId) {
+        $request->validate(['mensaje' => 'required|string']);
 
-        // Crear un nuevo mensaje
         Mensaje::create([
+            'chat_id' => $chatId,
             'usuario_id' => Auth::id(),
-            'incidencia_id' => $incidenciaId,
             'mensaje' => $request->mensaje,
         ]);
 
-        return redirect()->route('chat.show', $incidenciaId); // Redirigir al chat con los nuevos mensajes
+        return back();
     }
 }

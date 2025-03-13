@@ -39,4 +39,9 @@ class Incidencia extends Model {
     public function sede() {
         return $this->belongsTo(Sede::class);
     }
+
+    public function chat() {
+        return $this->hasOne(Chat::class);
+    }
+    
 }
