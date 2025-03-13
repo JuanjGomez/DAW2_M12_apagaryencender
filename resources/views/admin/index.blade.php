@@ -18,10 +18,10 @@
                 <h2 class="text-2xl font-semibold">Panel Admin</h2>
             </div>
             <nav class="mt-4">
-                <a href="#" class="block py-2.5 px-4 hover:bg-blue-700">
+                <a href="{{ route('admin.index') }}" class="block py-2.5 px-4 hover:bg-blue-700">
                     <i class="fas fa-users mr-2"></i>Gestión Usuarios
                 </a>
-                <a href="#" class="block py-2.5 px-4 hover:bg-blue-700">
+                <a href="{{ route('admin.categorias') }}" class="block py-2.5 px-4 hover:bg-blue-700">
                     <i class="fas fa-tasks mr-2"></i>Tipos de Incidencias
                 </a>
                 <a href="#" class="block py-2.5 px-4 hover:bg-blue-700">
@@ -68,13 +68,13 @@
                         @endforeach
                     </select>
 
-                    <input type="text" 
-                           id="searchInput" 
-                           class="rounded-lg border-gray-300" 
+                    <input type="text"
+                           id="searchInput"
+                           class="rounded-lg border-gray-300"
                            placeholder="Buscar usuario name o email..."
                            value="{{ request('search') }}">
 
-                    <button id="clearFilters" 
+                    <button id="clearFilters"
                             class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center justify-center">
                         <i class="fas fa-times mr-2"></i>
                         Borrar filtros
@@ -169,7 +169,7 @@
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="user_id" id="editUserId">
-                
+
                         <!-- Nombre -->
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Nombre</label>
