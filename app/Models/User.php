@@ -24,7 +24,7 @@ class User extends Authenticatable {
     }
 
     // Relación con las incidencias del técnico (un técnico puede tener muchas incidencias)
-    public function incidenciasTecnico() {
+    public function incidencias() {
         return $this->hasMany(Incidencia::class, 'tecnico_id');
     }
 
