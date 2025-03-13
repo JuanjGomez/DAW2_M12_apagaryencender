@@ -51,8 +51,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/cliente/{id}', [ClienteController::class, 'show'])->name('cliente.show');
 
         // Ruta para mostrar el chat de una incidencia
-        Route::get('/chat/{incidencia}', [ChatController::class, 'show'])->name('chat.show');       
-        
+        Route::get('/chat/{incidencia}', [ChatController::class, 'show'])->name('chat.show');
+
         // Ruta para almacenar un mensaje en el chat
         Route::post('/chat/{incidencia}/store', [ChatController::class, 'store'])->name('chat.store');
 
