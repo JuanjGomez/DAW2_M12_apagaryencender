@@ -10,8 +10,6 @@ class UsersTableSeeder extends Seeder
 {
     public function run()
     {
-        // Crear usuarios con roles, sede, estado y jefe_id
-
         // Administrador
         User::create([
             'name' => 'Administrador',
@@ -27,7 +25,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'Cliente Barcelona',
             'email' => 'cliente@empresa.com',
             'password' => Hash::make('qweQWE123'),
-            'role_id' => 2,  // Cliente
+            'role_id' => 4,  // Cliente
             'sede_id' => 1,  // Barcelona
             'estado' => 'activo',
         ]);
@@ -37,7 +35,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'Tecnico Barcelona',
             'email' => 'tecnico@empresa.com',
             'password' => Hash::make('qweQWE123'),
-            'role_id' => 4,  // Técnico
+            'role_id' => 2,  // Técnico
             'sede_id' => 1,  // Barcelona
             'jefe_id' => 1,  // Jefe de Barcelona (Administrador)
             'estado' => 'activo',
@@ -58,7 +56,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'Tecnico Berlín',
             'email' => 'tecnico.berlin@empresa.com',
             'password' => Hash::make('qweQWE123'),
-            'role_id' => 4,  // Técnico
+            'role_id' => 2,  // Técnico
             'sede_id' => 2,  // Berlín
             'jefe_id' => 4,  // Gestor de Berlín
             'estado' => 'activo',
@@ -69,7 +67,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'Tecnico Montreal',
             'email' => 'tecnico.montreal@empresa.com',
             'password' => Hash::make('qweQWE123'),
-            'role_id' => 4,  // Técnico
+            'role_id' => 2,  // Técnico
             'sede_id' => 3,  // Montreal
             'estado' => 'activo',
         ]);
