@@ -40,100 +40,34 @@
             </div>
 
             <!-- Filtros -->
-            <form action="{{ route('gestor.index') }}" method="GET" class="bg-white p-4 rounded-lg shadow mb-6">
+            <form id="filtrosForm" class="bg-white p-4 rounded-lg shadow mb-6">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <select name="prioridad_id" class="border rounded-lg px-3 py-2" onchange="this.form.submit()">
+                    <select name="prioridad_id" class="border rounded-lg px-3 py-2">
                         <option value="">Todas las prioridades</option>
                         @foreach($prioridades as $prioridad)
-                            <option value="{{ $prioridad->id }}" {{ request('prioridad_id') == $prioridad->id ? 'selected' : '' }}>
-                                {{ $prioridad->nombre }}
-                            </option>
+                            <option value="{{ $prioridad->id }}">{{ $prioridad->nombre }}</option>
                         @endforeach
                     </select>
-                    <select name="tecnico_id" class="border rounded-lg px-3 py-2" onchange="this.form.submit()">
+                    <select name="tecnico_id" class="border rounded-lg px-3 py-2">
                         <option value="">Todos los técnicos</option>
-                        @foreach(Auth::user()->sede->tecnicos as $tecnico)
-                            <option value="{{ $tecnico->id }}" {{ request('tecnico_id') == $tecnico->id ? 'selected' : '' }}>
-                                {{ $tecnico->name }}
-                            </option>
+                        @foreach($tecnicos as $tecnico)
+                            <option value="{{ $tecnico->id }}">{{ $tecnico->name }}</option>
                         @endforeach
                     </select>
                     <div class="flex items-center">
-                        <input type="checkbox" id="ocultar_resueltas" name="ocultar_resueltas" value="1" 
-                               {{ request('ocultar_resueltas') ? 'checked' : '' }} 
-                               onchange="this.form.submit()" class="mr-2">
+                        <input type="checkbox" id="ocultar_resueltas" name="ocultar_resueltas" value="1" class="mr-2">
                         <label for="ocultar_resueltas">Ocultar resueltas</label>
                     </div>
-                    <select name="fecha_entrada" class="border rounded-lg px-3 py-2" onchange="this.form.submit()">
-                        <option value="">Todas las fechas</option>
-                        <option value="asc" {{ request('fecha_entrada') == 'asc' ? 'selected' : '' }}>Más antiguas primero</option>
-                        <option value="desc" {{ request('fecha_entrada') == 'desc' ? 'selected' : '' }}>Más recientes primero</option>
+                    <select name="fecha_entrada" class="border rounded-lg px-3 py-2">
+                        <option value="desc">Más recientes primero</option>
+                        <option value="asc">Más antiguas primero</option>
                     </select>
                 </div>
             </form>
 
             <!-- Tabla de incidencias -->
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-                <table class="min-w-full">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descripción</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prioridad</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Técnico</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @foreach($incidencias as $incidencia)
-                        <tr>
-                            <td class="px-6 py-4">#{{ $incidencia->id }}</td>
-                            <td class="px-6 py-4">{{ $incidencia->cliente->name }}</td>
-                            <td class="px-6 py-4">{{ Str::limit($incidencia->descripcion, 50) }}</td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 rounded-full text-xs
-                                    {{ $incidencia->estado->nombre === 'Sin asignar' ? 'bg-gray-100 text-gray-800' : '' }}
-                                    {{ $incidencia->estado->nombre === 'Asignada' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                    {{ $incidencia->estado->nombre === 'En trabajo' ? 'bg-blue-100 text-blue-800' : '' }}
-                                    {{ $incidencia->estado->nombre === 'Resuelta' ? 'bg-green-100 text-green-800' : '' }}
-                                    {{ $incidencia->estado->nombre === 'Cerrada' ? 'bg-green-100 text-green-800' : '' }}">
-                                    {{ $incidencia->estado->nombre }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <select class="border rounded px-2 py-1 text-sm"
-                                        onchange="actualizarPrioridad({{ $incidencia->id }}, this.value)">
-                                    <option value="">Sin prioridad</option>
-                                    @foreach($prioridades as $prioridad)
-                                        <option value="{{ $prioridad->id }}" {{ $incidencia->prioridad_id == $prioridad->id ? 'selected' : '' }}>
-                                            {{ $prioridad->nombre }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td class="px-6 py-4">
-                                <select class="border rounded px-2 py-1 text-sm"
-                                        onchange="asignarTecnico({{ $incidencia->id }}, this.value)">
-                                    <option value="">Sin asignar</option>
-                                    @foreach(Auth::user()->sede->tecnicos as $tecnico)
-                                        <option value="{{ $tecnico->id }}"
-                                                {{ $incidencia->tecnico_id == $tecnico->id ? 'selected' : '' }}>
-                                            {{ $tecnico->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td class="px-6 py-4">
-                                <a href="{{ route('gestor.show', $incidencia->id) }}" class="text-blue-600 hover:text-blue-800">
-                                    <i class="fas fa-eye"></i> Ver
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div id="tablaIncidencias">
+                @include('gestor.partials.tabla-incidencias')
             </div>
         </main>
     </div>
@@ -173,6 +107,31 @@
             }
         });
     }
+
+    function aplicarFiltros() {
+        const formData = new FormData(document.getElementById('filtrosForm'));
+        
+        fetch('{{ route("gestor.filtrar") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('tablaIncidencias').innerHTML = data.html;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Agregar event listeners a los filtros
+    document.querySelectorAll('#filtrosForm select, #filtrosForm input').forEach(element => {
+        element.addEventListener('change', aplicarFiltros);
+    });
     </script>
 </body>
 </html>

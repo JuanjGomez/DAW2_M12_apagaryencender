@@ -136,4 +136,43 @@ class GestorController extends Controller
         }
         return redirect()->route('cliente.index')->with('success', 'Incidencia cerrada con éxito');
     }
+
+    public function filtrarIncidencias(Request $request)
+    {
+        $sede_id = Auth::user()->sede_id;
+        
+        $query = Incidencia::where('sede_id', $sede_id);
+        
+        // Filtrar por prioridad
+        if ($request->has('prioridad_id') && $request->prioridad_id) {
+            $query->where('prioridad_id', $request->prioridad_id);
+        }
+        
+        // Filtrar por técnico
+        if ($request->has('tecnico_id') && $request->tecnico_id) {
+            $query->where('tecnico_id', $request->tecnico_id);
+        }
+        
+        // Ocultar resueltas
+        if ($request->has('ocultar_resueltas')) {
+            $query->whereNotIn('estado_id', [4, 5]);
+        }
+        
+        // Ordenar por fecha
+        $orden = $request->has('fecha_entrada') ? $request->fecha_entrada : 'desc';
+        $query->orderBy('fecha_creacion', $orden);
+        
+        $incidencias = $query->with(['cliente', 'tecnico', 'estado', 'prioridad'])->get();
+        
+        // Obtener las variables necesarias para los selectores
+        $tecnicos = User::where('sede_id', $sede_id)
+                        ->where('role_id', 2)
+                        ->get();
+        $prioridades = Prioridad::all();
+        
+        return response()->json([
+            'success' => true,
+            'html' => view('gestor.partials.tabla-incidencias', compact('incidencias', 'tecnicos', 'prioridades'))->render()
+        ]);
+    }
 }
