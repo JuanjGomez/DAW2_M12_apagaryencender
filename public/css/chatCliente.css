@@ -1,82 +1,145 @@
- en .chat-box {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+/* Estilo base para el chat */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7fafc;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor del chat */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     padding: 20px;
-    background-color: #f9f9f9;
+}
+
+/* Caja del chat */
+.chat-box {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
     max-width: 600px;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
 }
 
+/* Cabecera del chat */
 .chat-header {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px 8px 0 0;
     text-align: center;
-    margin-bottom: 15px;
+    font-size: 20px;
 }
 
+/* Área de mensajes */
 .chat-messages {
-    margin-bottom: 20px;
+    padding: 20px;
+    overflow-y: auto;
+    flex-grow: 1;
+    max-height: 400px;
+    border-bottom: 1px solid #ddd;
 }
 
+/* Estilo para los mensajes */
 .message {
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 10px;
-    max-width: 80%;
-    clear: both;
-    font-size: 14px;
-    word-wrap: break-word;
-    line-height: 1.4;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .message-client {
-    background-color: #DCF8C6;
-    text-align: left;
-    margin-left: 40px;
-    float: left;
+    align-items: flex-end;
 }
 
 .message-tecnico {
-    background-color: #f1f0f0;
-    text-align: right;
-    margin-right: 40px;
-    float: right;
+    align-items: flex-start;
 }
 
-.message-content p {
-    margin: 0;
+/* Contenido de cada mensaje */
+.message-content {
+    max-width: 80%;
+    padding: 10px;
+    border-radius: 12px;
+    background-color: #f1f1f1;
+    margin-bottom: 5px;
+    font-size: 14px;
+    word-wrap: break-word;
+    box-sizing: border-box;
 }
 
+/* Diferenciamos los colores entre el cliente y el técnico */
+.message-client .message-content {
+    background-color: #d1e7dd;
+}
+
+.message-tecnico .message-content {
+    background-color: #f8d7da;
+}
+
+/* Información del mensaje */
 .message-info {
-    display: flex;
-    justify-content: space-between;
     font-size: 12px;
-    color: #888;
-    margin-top: 5px;
+    color: #555;
+    text-align: right;
 }
 
+/* Estilo del campo de texto para enviar mensajes */
 .input-group {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 0 0 8px 8px;
 }
 
-.input-group textarea {
-    width: 85%;
-    border-radius: 8px;
+textarea.form-control {
+    width: 100%;
     padding: 10px;
-    resize: none;
+    border-radius: 8px;
+    border: 1px solid #ccc;
     font-size: 14px;
+    resize: none;
+    margin-right: 10px;
 }
 
-.input-group button {
-    width: 12%;
-    border-radius: 8px;
-    padding: 10px;
-    background-color: #007bff;
+button.btn {
+    background-color: #4CAF50;
     color: white;
     border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
 }
 
-.input-group button:hover {
-    background-color: #0056b3;
+button.btn:hover {
+    background-color: #45a049;
+}
+
+textarea.form-control:focus,
+button.btn:focus {
+    outline: none;
+}
+
+textarea.form-control::placeholder {
+    color: #aaa;
+}
+
+/* Estilo de scrollbar */
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
 }
