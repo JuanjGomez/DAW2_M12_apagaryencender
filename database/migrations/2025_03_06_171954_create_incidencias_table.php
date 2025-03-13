@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('imagen')->nullable();
             $table->timestamp('fecha_creacion')->useCurrent();
             $table->timestamp('fecha_resolucion')->nullable();
+            $table->foreignId('chat_id')->nullable()->constrained('chats')->onDelete('set null');
             $table->timestamps();
         });
     }
@@ -28,4 +29,3 @@ return new class extends Migration {
         Schema::dropIfExists('incidencias');
     }
 };
-

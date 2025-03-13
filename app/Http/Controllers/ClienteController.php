@@ -6,6 +6,8 @@ use App\Models\Categoria;
 use App\Models\Subcategoria;
 use App\Models\User;
 use App\Models\Sede;
+use App\Models\Chat;
+use App\Models\Mensaje;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Incidencia;
@@ -98,10 +100,32 @@ class ClienteController extends Controller
     
         // Obtener las incidencias filtradas
         $incidencias = $query->get();
+
+        // Obtener solo las incidencias resueltas (estado_id == 4)
+        $incidenciasResueltas = Incidencia::where('cliente_id', Auth::id())
+                                        ->where('estado_id', 4) // Estado resuelto
+                                        ->get();
     
         // Pasar las incidencias a la vista
-        return view('cliente.index', compact('incidencias'));
+        return view('cliente.index', compact('incidencias','incidenciasResueltas'));
     }
+
+        // Método para cerrar una incidencia
+        public function cerrar(Incidencia $incidencia)
+        {
+            // Verificar que la incidencia esté resuelta antes de cerrarla
+            if ($incidencia->estado_id == 4) { // Suponiendo que 4 es el estado de "resuelta"
+                // Cambiar el estado a "cerrada" (por ejemplo, estado_id = 5)
+                $incidencia->estado_id = 5; // Cambiar a "cerrada"
+                $incidencia->save();
+    
+                // Redirigir con un mensaje de éxito
+                return redirect()->route('cliente.index')->with('success', 'Incidencia cerrada correctamente.');
+            }
+    
+            // Si no está resuelta, no permitir cerrarla y mostrar un mensaje de error
+            return redirect()->route('cliente.index')->with('error', 'Solo se pueden cerrar incidencias resueltas.');
+        }
     
 
     // Mostrar detalles de una incidencia
@@ -110,4 +134,25 @@ class ClienteController extends Controller
         $incidencia = Incidencia::findOrFail($id);
         return view('cliente.show', compact('incidencia'));
     }
+
+    public function showChat($incidenciaId)
+{
+    // Obtener la incidencia
+    $incidencia = Incidencia::findOrFail($incidenciaId);
+
+    // Obtener el chat relacionado con la incidencia
+    $chat = $incidencia->chat;
+
+    // Si no existe un chat, crear uno (si lo deseas)
+    if (!$chat) {
+        $chat = Chat::create(['incidencia_id' => $incidencia->id]);
+    }
+
+    // Obtener los mensajes del chat
+    $mensajes = $chat->mensajes()->with('usuario')->get();
+
+    // Pasar los datos a la vista
+    return view('cliente.chat', compact('incidencia', 'chat', 'mensajes'));
+}
+
 }

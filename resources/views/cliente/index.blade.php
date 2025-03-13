@@ -62,7 +62,6 @@
                 </div>
             </div>
 
-
             <!-- Filtros y tabla de incidencias -->
             <div class="bg-white p-6 mt-6 rounded-lg shadow">
                 <h3 class="text-lg font-semibold mb-4">Mis Incidencias</h3>
@@ -126,6 +125,14 @@
                                 <a href="{{ route('cliente.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                                     Ver detalles
                                 </a>
+                                <!-- Botón de cerrar incidencia -->
+                                <form method="POST" action="{{ route('incidencia.cerrar', $incidencia->id) }}" class="inline-block">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                                        <i class="fas fa-check-circle"></i> Cerrar
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach
@@ -138,6 +145,50 @@
                 <a href="{{ route('cliente.create') }}" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                     Crear nueva incidencia
                 </a>
+            </div>
+
+            <!-- Lista de incidencias resueltas -->
+            <div class="bg-white p-6 mt-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Incidencias Resueltas</h3>
+                <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="py-2 px-4 text-left">Descripción</th>
+                            <th class="py-2 px-4 text-left">Estado</th>
+                            <th class="py-2 px-4 text-left">Técnico</th>
+                            <th class="py-2 px-4 text-left">Fecha de Resolución</th>
+                            <th class="py-2 px-4 text-left">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($incidenciasResueltas as $incidencia)
+                        <tr class="border-t border-gray-200">
+                            <td class="py-2 px-4">{{ $incidencia->descripcion }}</td>
+                            <td class="py-2 px-4">{{ $incidencia->estado->nombre }}</td>
+                            <td class="py-2 px-4">{{ $incidencia->tecnico->name }}</td>
+                            <td class="py-2 px-4">{{ $incidencia->fecha_resolucion }}</td>
+                            <td class="py-2 px-4 flex gap-2">
+                                <!-- Botón de chat -->
+                                <a href="{{ route('chat.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                                    <i class="fas fa-comments"></i> Chat
+                                </a>
+                                <!-- Botón de ver detalles -->
+                                <a href="{{ route('cliente.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                    Ver detalles
+                                </a>
+                                <!-- Botón de cerrar incidencia -->
+                                <form method="POST" action="{{ route('incidencia.cerrar', $incidencia->id) }}" class="inline-block">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                                        <i class="fas fa-check-circle"></i> Cerrar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </main>
     </div>

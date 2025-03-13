@@ -9,7 +9,7 @@ class Incidencia extends Model {
     use HasFactory;
 
     protected $fillable = [
-        'cliente_id', 'tecnico_id', 'categoria_id', 'subcategoria_id','estado_id', 'prioridad_id', 'descripcion', 'imagen', 'fecha_creacion', 'fecha_resolucion', 'sede_id'
+        'cliente_id', 'tecnico_id', 'categoria_id', 'subcategoria_id','estado_id', 'prioridad_id', 'descripcion', 'imagen', 'fecha_creacion', 'fecha_resolucion', 'sede_id','chat_id'
 ];
 
     public function cliente() {
@@ -39,4 +39,9 @@ class Incidencia extends Model {
     public function sede() {
         return $this->belongsTo(Sede::class);
     }
+
+    public function chat() {
+        return $this->hasOne(Chat::class);
+    }
+    
 }
