@@ -91,21 +91,30 @@
     }
 
     function asignarTecnico(incidenciaId, tecnicoId) {
-        fetch(`/gestor/incidencia/${incidenciaId}/asignar-tecnico`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ tecnico_id: tecnicoId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Opcional: mostrar mensaje de éxito o recargar la página
-                window.location.reload();
-            }
-        });
+    fetch(`/gestor/incidencia/${incidenciaId}/asignar-tecnico`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ tecnico_id: tecnicoId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            aplicarFiltros(); // Solo actualizamos la tabla
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+    // Función auxiliar para mostrar notificaciones
+    function mostrarNotificacion(mensaje, tipo = 'success') {
+        // Aquí puedes implementar tu sistema de notificaciones preferido
+        // Por ejemplo, usando una librería como toastr o una implementación personalizada
+        alert(mensaje); // Implementación básica
     }
 
     function aplicarFiltros() {

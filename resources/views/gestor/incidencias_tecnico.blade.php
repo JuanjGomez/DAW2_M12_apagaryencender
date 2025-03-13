@@ -30,6 +30,23 @@
         <main class="flex-1 p-8">
             <h1 class="text-2xl font-bold mb-6">Incidencias por Técnico</h1>
             
+            <!-- Filtros -->
+            <div class="bg-white p-4 rounded-lg shadow mb-6">
+                <div class="flex items-center gap-4">
+                    <select name="ordenar_por" class="border rounded-lg px-3 py-2" onchange="aplicarFiltros(this.value)">
+                        <option value="desc">Más recientes primero</option>
+                        <option value="asc">Más antiguas primero</option>
+                        <option value="prioridad">Por prioridad</option>
+                    </select>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="ocultar_cerradas" name="ocultar_cerradas" 
+                               class="mr-2" onchange="aplicarFiltros()">
+                        <label for="ocultar_cerradas">Ocultar cerradas</label>
+                    </div>
+                </div>
+            </div>
+
             @foreach($tecnicos as $tecnico)
             <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                 <h2 class="text-xl font-semibold mb-4">{{ $tecnico->name }}</h2>
@@ -84,5 +101,19 @@
             @endforeach
         </main>
     </div>
+
+    <script>
+    function aplicarFiltros() {
+        const ordenar = document.querySelector('[name="ordenar_por"]').value;
+        const ocultarCerradas = document.getElementById('ocultar_cerradas').checked;
+        
+        const params = new URLSearchParams({
+            ordenar_por: ordenar,
+            ocultar_cerradas: ocultarCerradas ? '1' : ''
+        });
+        
+        window.location.href = `{{ route('gestor.incidencias.tecnico') }}?${params.toString()}`;
+    }
+    </script>
 </body>
 </html> 

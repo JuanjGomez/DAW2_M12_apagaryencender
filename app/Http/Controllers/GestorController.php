@@ -55,14 +55,12 @@ class GestorController extends Controller
     {
         $incidencia = Incidencia::findOrFail($id);
         
-        // Verificar que la incidencia pertenece a la sede del gestor
         if ($incidencia->sede_id != Auth::user()->sede_id) {
             return response()->json(['error' => 'No autorizado'], 403);
         }
         
         $incidencia->tecnico_id = $request->tecnico_id;
         
-        // Si se asigna un técnico, cambiar el estado a "Asignada" (ID 2)
         if ($request->tecnico_id) {
             $incidencia->estado_id = 2; // Asignada
         } else {
@@ -71,7 +69,11 @@ class GestorController extends Controller
         
         $incidencia->save();
         
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'mensaje' => 'Técnico asignado correctamente',
+            'incidencia' => $incidencia->load(['tecnico', 'estado']) // Cargamos las relaciones necesarias
+        ]);
     }
     
     public function actualizarPrioridad(Request $request, $id)
@@ -110,16 +112,31 @@ class GestorController extends Controller
         return view('gestor.show', compact('incidencia', 'tecnicos', 'prioridades'));
     }
 
-    public function incidenciasPorTecnico()
+    public function incidenciasPorTecnico(Request $request)
     {
         $sede_id = Auth::user()->sede_id;
         
         // Obtener técnicos de la sede con sus incidencias
         $tecnicos = User::where('sede_id', $sede_id)
                         ->where('role_id', 2)
-                        ->with(['incidencias' => function($query) {
-                            $query->with(['estado', 'prioridad'])
-                                 ->orderBy('fecha_creacion', 'desc');
+                        ->with(['incidencias' => function($query) use ($request) {
+                            $query->with(['estado', 'prioridad']);
+                            
+                            // Ocultar cerradas si se solicita
+                            if ($request->has('ocultar_cerradas')) {
+                                $query->where('estado_id', '!=', 5);
+                            }
+                            
+                            // Ordenar por prioridad o fecha
+                            if ($request->has('ordenar_por')) {
+                                if ($request->ordenar_por === 'prioridad') {
+                                    $query->orderBy('prioridad_id', 'asc');
+                                } else {
+                                    $query->orderBy('fecha_creacion', $request->ordenar_por);
+                                }
+                            } else {
+                                $query->orderBy('fecha_creacion', 'desc');
+                            }
                         }])
                         ->get();
         
