@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="{{ asset('css/chatCliente.css') }}"> <!-- Enlazamos el archivo CSS -->
 </head>
 <body>
+
+    
+    @if(Auth::user()->role_id == 4)
     <!-- Navbar -->
     <nav class="bg-white shadow-lg">
             <div class="max-w-7xl mx-auto px-4">
@@ -18,13 +21,11 @@
                         <img src="{{ asset('img/adje.png') }}" alt="Logo" class="h-10 mr-4">
                         <h1 class="text-xl font-bold">Sistema de Incidencias</h1>
                     </div>
-                    @if(Auth::user()->role_id == 4)
                     <div class="flex items-center space-x-4">
                     <a href="{{ route('cliente.index') }}" class="text-blue-600 hover:text-blue-800">
                         Volver al listado de incidencias
                     </a>
                 </div>
-                    @endif
                     <div class="flex items-center">
                         <span class="text-gray-700 mr-4">Bienvenido, {{ Auth::user()->name }}</span>
                         <form method="POST" action="{{ route('logout') }}">
@@ -37,6 +38,7 @@
                 </div>
             </div>
         </nav>
+        @endif
 
     <div class="container">
         <div class="chat-box">

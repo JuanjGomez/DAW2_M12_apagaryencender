@@ -104,6 +104,9 @@
                                         onclick="resolverIncidencia({{ $incidencia->id }})">
                                     <i class="fas fa-check-circle"></i>
                                 </button>
+                                <a href="{{ route('chat.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                                    <i class="fas fa-comments"></i> Chat
+                                </a>
                             </td>
                         </tr>
                         @endforeach
