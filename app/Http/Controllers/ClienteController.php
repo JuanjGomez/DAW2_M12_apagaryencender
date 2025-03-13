@@ -6,6 +6,8 @@ use App\Models\Categoria;
 use App\Models\Subcategoria;
 use App\Models\User;
 use App\Models\Sede;
+use App\Models\Chat;
+use App\Models\Mensaje;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Incidencia;
@@ -110,4 +112,25 @@ class ClienteController extends Controller
         $incidencia = Incidencia::findOrFail($id);
         return view('cliente.show', compact('incidencia'));
     }
+
+    public function showChat($incidenciaId)
+{
+    // Obtener la incidencia
+    $incidencia = Incidencia::findOrFail($incidenciaId);
+
+    // Obtener el chat relacionado con la incidencia
+    $chat = $incidencia->chat;
+
+    // Si no existe un chat, crear uno (si lo deseas)
+    if (!$chat) {
+        $chat = Chat::create(['incidencia_id' => $incidencia->id]);
+    }
+
+    // Obtener los mensajes del chat
+    $mensajes = $chat->mensajes()->with('usuario')->get();
+
+    // Pasar los datos a la vista
+    return view('cliente.chat', compact('incidencia', 'chat', 'mensajes'));
+}
+
 }
