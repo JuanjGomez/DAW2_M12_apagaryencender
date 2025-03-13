@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Sede;
 use App\Models\Categoria;
 use App\Models\Subcategoria;
+use App\Models\Mensaje;
+use App\Models\Chat;
+use App\Models\Incidencia;
 
 class AdminController extends Controller
 {
@@ -132,6 +136,8 @@ class AdminController extends Controller
 
     public function destroyUser($id) {
         try {
+            DB::beginTransaction();
+
             $user = User::findOrFail($id);
 
             // Verificar si no es el ultimo administrador
@@ -149,9 +155,22 @@ class AdminController extends Controller
             }
 
             // Eliminar registros relacionados
+            // Eliminar mensajes del usuario
+            Mensaje::where('usuario_id', $id)->delete();
 
-            $user->delete();
+            // Eliminar chats del usuario
+            Chat::where('usuario_id', $id)->delete();
 
+            // En lugar de eliminar las incidencias, se actualiza a null
+            Incidencia::where('cliente_id', $id)
+                ->update(['cliente_id' => null]);
+            Incidencia::where('tecnico_id', $id)
+                ->update(['tecnico_id' => null]);
+
+            // Eliminar usuario
+            User::findOrFail($id)->delete();
+
+            DB::commit();
             return response()->json([
                 'success' => true,
                 'message' => 'Usuario eliminado exitosamente'
@@ -291,13 +310,6 @@ class AdminController extends Controller
                 'message' => 'Error al actualizar la categoría',
                 'error' => $e->getMessage()
             ], 500);
-        }
-    }
-
-    public function destroyCategorias($id)
-    {
-        try{
-
         }
     }
 
