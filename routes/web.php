@@ -50,6 +50,9 @@ Route::middleware(['auth'])->group(function () {
         // Ruta para ver los detalles de una incidencia
         Route::get('/cliente/{id}', [ClienteController::class, 'show'])->name('cliente.show');
 
+        // Ruta para cerrar una incidencia desde el cliente
+        Route::patch('/incidencia/{incidencia}/cerrar', [ClienteController::class, 'cerrar'])->name('incidencia.cerrar');
+
         // Ruta para mostrar el chat de una incidencia
         Route::get('/chat/{incidencia}', [ChatController::class, 'show'])->name('chat.show');
 
