@@ -68,6 +68,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/incidencia/{id}/actualizar-prioridad', [GestorController::class, 'actualizarPrioridad'])->name('actualizar.prioridad');
         Route::get('/incidencias-por-tecnico', [GestorController::class, 'incidenciasPorTecnico'])->name('incidencias.tecnico');
         Route::post('/filtrar', [GestorController::class, 'filtrarIncidencias'])->name('filtrar');
+        Route::post('/incidencias-tecnico/filtrar', [GestorController::class, 'filtrarIncidenciasPorTecnico'])
+             ->name('incidencias-tecnico.filtrar');
     });
 
     // Rutas para técnico

@@ -119,8 +119,8 @@ class GestorController extends Controller
         // Obtener técnicos de la sede con sus incidencias
         $tecnicos = User::where('sede_id', $sede_id)
                         ->where('role_id', 2)
-                        ->with(['incidencias' => function($query) use ($request) {
-                            $query->with(['estado', 'prioridad']);
+                        ->with(['incidenciasTecnico' => function($query) use ($request) {
+                            $query->with(['estado', 'prioridad', 'cliente']);
                             
                             // Ocultar cerradas si se solicita
                             if ($request->has('ocultar_cerradas')) {
@@ -190,6 +190,33 @@ class GestorController extends Controller
         return response()->json([
             'success' => true,
             'html' => view('gestor.partials.tabla-incidencias', compact('incidencias', 'tecnicos', 'prioridades'))->render()
+        ]);
+    }
+
+    public function filtrarIncidenciasPorTecnico(Request $request)
+    {
+        $sede_id = Auth::user()->sede_id;
+        
+        $tecnicos = User::where('sede_id', $sede_id)
+                        ->where('role_id', 2)
+                        ->with(['incidenciasTecnico' => function($query) use ($request) {
+                            $query->with(['cliente', 'estado', 'prioridad']);
+                            
+                            if ($request->estado_id) {
+                                $query->where('estado_id', $request->estado_id);
+                            }
+                            
+                            if ($request->ordenar_por === 'prioridad') {
+                                $query->orderBy('prioridad_id', 'asc');
+                            } else {
+                                $query->orderBy('fecha_creacion', $request->ordenar_por ?? 'desc');
+                            }
+                        }])
+                        ->get();
+
+        return response()->json([
+            'success' => true,
+            'html' => view('gestor.partials.tabla-incidencias-tecnico', compact('tecnicos'))->render()
         ]);
     }
 }

@@ -45,76 +45,57 @@
                 <!-- Filtros -->
                 <div class="bg-white p-4 rounded-lg shadow mb-6">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                        <select name="ordenar_por" class="w-full sm:w-auto border rounded-lg px-3 py-2" onchange="aplicarFiltros(this.value)">
+                        <select id="ordenar_por" name="ordenar_por" class="w-full sm:w-auto border rounded-lg px-3 py-2">
                             <option value="desc">Más recientes primero</option>
                             <option value="asc">Más antiguas primero</option>
                             <option value="prioridad">Por prioridad</option>
                         </select>
-                        
-                        <div class="flex items-center">
-                            <input type="checkbox" id="ocultar_cerradas" name="ocultar_cerradas" 
-                                   class="mr-2" onchange="aplicarFiltros()">
-                            <label for="ocultar_cerradas">Ocultar cerradas</label>
-                        </div>
+                        <select id="filtrar_estado" name="filtrar_estado" class="w-full sm:w-auto border rounded-lg px-3 py-2">
+                            <option value="">Todos los estados</option>
+                            <option value="2">Asignadas</option>
+                            <option value="3">En trabajo</option>
+                            <option value="4">Resueltas</option>
+                        </select>
                     </div>
                 </div>
 
-                @foreach($tecnicos as $tecnico)
-                <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-6">
-                    <h2 class="text-xl font-semibold mb-4">{{ $tecnico->name }}</h2>
-                    
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prioridad</th>
-                                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($tecnico->incidencias as $incidencia)
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-3 sm:px-6 py-4 text-sm">#{{ $incidencia->id }}</td>
-                                    <td class="px-3 sm:px-6 py-4 text-sm">{{ $incidencia->cliente->name }}</td>
-                                    <td class="px-3 sm:px-6 py-4 text-sm">
-                                        <span class="px-2 py-1 text-xs rounded-full
-                                            {{ $incidencia->estado->color_clase }}">
-                                            {{ $incidencia->estado->nombre }}
-                                        </span>
-                                    </td>
-                                    <td class="px-3 sm:px-6 py-4 text-sm">
-                                        <span class="px-2 py-1 text-xs rounded-full
-                                            {{ $incidencia->prioridad->color_clase }}">
-                                            {{ $incidencia->prioridad->nombre }}
-                                        </span>
-                                    </td>
-                                    <td class="px-3 sm:px-6 py-4 text-sm">{{ $incidencia->fecha_creacion }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                <!-- Contenedor para la tabla -->
+                <div id="tablaIncidenciasTecnico">
+                    @include('gestor.partials.tabla-incidencias-tecnico')
                 </div>
-                @endforeach
             </div>
         </main>
     </div>
 
+    <!-- Script para AJAX -->
     <script>
     function aplicarFiltros() {
-        const ordenar = document.querySelector('[name="ordenar_por"]').value;
-        const ocultarCerradas = document.getElementById('ocultar_cerradas').checked;
-        
-        const params = new URLSearchParams({
-            ordenar_por: ordenar,
-            ocultar_cerradas: ocultarCerradas ? '1' : ''
-        });
-        
-        window.location.href = `{{ route('gestor.incidencias.tecnico') }}?${params.toString()}`;
+        const ordenar = document.getElementById('ordenar_por').value;
+        const estado = document.getElementById('filtrar_estado').value;
+
+        fetch('/gestor/incidencias-tecnico/filtrar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                ordenar_por: ordenar,
+                estado_id: estado
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('tablaIncidenciasTecnico').innerHTML = data.html;
+            }
+        })
+        .catch(error => console.error('Error:', error));
     }
+
+    // Event listeners para los selectores
+    document.getElementById('ordenar_por').addEventListener('change', aplicarFiltros);
+    document.getElementById('filtrar_estado').addEventListener('change', aplicarFiltros);
     </script>
 </body>
 </html> 
