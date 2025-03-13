@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ChatController;
 use App\Models\User;
@@ -28,10 +29,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Rutas securizadas ------------------------------------------------------------------------------------------------------
 Route::middleware(['auth'])->group(function () {
     // Rutas para administrador
-    Route::get('/admin', function () {
-        $users = User::with(['role', 'sede'])->get();
-        return view('admin.index', compact('users'));
-    })->name('admin.index');
+    Route::get('/admin', [AdminController::class, 'indexUsers'])->name('admin.index');
+    Route::post('/admin/createUsers', [AdminController::class, 'storeUser'])->name('admin.store');
+    Route::put('/admin/updateUsers/{id}', [AdminController::class, 'updateUser'])->name('admin.update');
+    Route::delete('/admin/deleteUsers/{id}', [AdminController::class, 'destroyUser'])->name('admin.destroy');
 
     // Rutas para cliente
     Route::get('/cliente', function () {
