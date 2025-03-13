@@ -15,14 +15,14 @@ class IncidenciasTableSeeder extends Seeder
             'tecnico_id' => 3, // Técnico Barcelona
             'categoria_id' => 1, // Software
             'subcategoria_id' => 1, // Aplicación gestión administrativa
-            'estado_id' => 1, // Sin asignar
+            'estado_id' => 4, // Sin asignar
             'prioridad_id' => 4, // Baja
             'sede_id' => 1, // Barcelona
             'descripcion' => 'La aplicación de gestión administrativa no responde al intentar abrirla.',
-            'resolucion' => null,
+            'resolucion' => 'Estamos a tope, nos ha ido bien',
             'imagen' => null,
             'fecha_creacion' => Carbon::now(),
-            'fecha_resolucion' => null,
+            'fecha_resolucion' => Carbon::now(),
             'chat_id' => null,
         ]);
 

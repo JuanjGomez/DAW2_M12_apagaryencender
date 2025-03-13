@@ -41,7 +41,7 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold mb-2">Mis Incidencias</h3>
                     <p class="text-3xl font-bold text-blue-600">
-                        {{ Auth::user()->incidenciasCliente->count() }}
+                    {{ Auth::user()->incidenciasCliente->whereIn('estado_id', [1, 2, 3, 4])->count() }}
                     </p>
                 </div>
 
@@ -57,7 +57,7 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold mb-2">Incidencias Resueltas</h3>
                     <p class="text-3xl font-bold text-green-600">
-                        {{ Auth::user()->incidenciasCliente->where('estado_id', 3)->count() }}
+                        {{ Auth::user()->incidenciasCliente->where('estado_id', 4)->count() }}
                     </p>
                 </div>
             </div>
@@ -125,14 +125,6 @@
                                 <a href="{{ route('cliente.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                                     Ver detalles
                                 </a>
-                                <!-- Botón de cerrar incidencia -->
-                                <form method="POST" action="{{ route('incidencia.cerrar', $incidencia->id) }}" class="inline-block">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-                                        <i class="fas fa-check-circle"></i> Cerrar
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                         @endforeach

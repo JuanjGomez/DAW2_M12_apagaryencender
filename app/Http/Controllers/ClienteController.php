@@ -98,8 +98,9 @@ class ClienteController extends Controller
             $query->orderBy('fecha_creacion', $request->orden);
         }
     
-        // Obtener las incidencias filtradas
-        $incidencias = $query->get();
+        // Obtener las incidencias filtradas por los criterios anteriores
+        $incidencias = $query->whereIn('estado_id', [1, 2, 3])
+                            ->get();
 
         // Obtener solo las incidencias resueltas (estado_id == 4)
         $incidenciasResueltas = Incidencia::where('cliente_id', Auth::id())
