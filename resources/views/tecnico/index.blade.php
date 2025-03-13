@@ -6,6 +6,8 @@
     <title>Dashboard Técnico - Sistema de Incidencias</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-100">
     <div class="min-h-screen flex">
@@ -101,8 +103,8 @@
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <button class="text-green-600 hover:text-green-800"
-                                        onclick="resolverIncidencia({{ $incidencia->id }})">
-                                    <i class="fas fa-check-circle"></i>
+                                        onclick="window.location.href='{{ route('chat.show', ['incidencia' => $incidencia->id]) }}'">
+                                    <i class="fas fa-comments"></i> Chat
                                 </button>
                             </td>
                         </tr>
@@ -112,5 +114,96 @@
             </div>
         </main>
     </div>
+
+    <!-- Modal de detalles -->
+    <div id="modalDetalles" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Ficha Técnica de Incidencia</h3>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-sm text-gray-500">ID Incidencia:</p>
+                        <p id="modal-id" class="font-medium"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Cliente:</p>
+                        <p id="modal-cliente" class="font-medium"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Descripción:</p>
+                        <p id="modal-descripcion" class="font-medium"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Categoría:</p>
+                        <p id="modal-categoria" class="font-medium"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Subcategoría:</p>
+                        <p id="modal-subcategoria" class="font-medium"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Fecha de creación:</p>
+                        <p id="modal-fecha" class="font-medium"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Estado:</p>
+                        <p id="modal-estado" class="font-medium"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Prioridad:</p>
+                        <p id="modal-prioridad" class="font-medium"></p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button id="cerrarModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Función para actualizar el estado
+    function actualizarEstado(incidenciaId, nuevoEstado) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/tecnico/incidencias/${incidenciaId}/actualizar-estado`;
+        
+        // CSRF Token
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = document.querySelector('meta[name="csrf-token"]').content;
+        form.appendChild(csrfToken);
+        
+        // Estado ID
+        const estadoInput = document.createElement('input');
+        estadoInput.type = 'hidden';
+        estadoInput.name = 'estado_id';
+        estadoInput.value = nuevoEstado;
+        form.appendChild(estadoInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    // Función para ver detalles
+    function verDetalles(incidenciaId) {
+        window.location.href = `/tecnico/incidencias/${incidenciaId}/detalles`;
+    }
+
+    // Cerrar modal
+    document.getElementById('cerrarModal').addEventListener('click', () => {
+        document.getElementById('modalDetalles').classList.add('hidden');
+    });
+
+    // Cerrar modal al hacer clic fuera
+    document.getElementById('modalDetalles').addEventListener('click', (e) => {
+        if (e.target.id === 'modalDetalles') {
+            document.getElementById('modalDetalles').classList.add('hidden');
+        }
+    });
+    </script>
 </body>
 </html>

@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Incidencia;
 use App\Models\Mensaje;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\IncidenciaController;
+use App\Http\Controllers\TecnicoController;
 
 
 // Rutas de acceso abierto -----------------------------------------------------------------------------------------------
@@ -71,3 +73,9 @@ Route::middleware(['auth'])->group(function () {
 
 });
 // ------------------------------------------------------------------------------------------------------------------------
+
+Route::get('/incidencias/{incidencia}/detalles', [IncidenciaController::class, 'obtenerDetalles'])->name('incidencias.detalles');
+Route::post('/incidencias/{incidencia}/actualizar-estado', [IncidenciaController::class, 'actualizarEstado'])->name('incidencias.actualizar-estado');
+
+Route::get('/tecnico/incidencias/{incidencia}/detalles', [TecnicoController::class, 'obtenerDetalles'])->name('tecnico.incidencias.detalles');
+Route::post('/tecnico/incidencias/{incidencia}/actualizar-estado', [TecnicoController::class, 'actualizarEstado'])->name('tecnico.incidencias.actualizar-estado');
