@@ -3,17 +3,20 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Prioridad;
 
 class PrioridadesTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('prioridades')->insert([
-            ['nombre' => 'Urgente'],
+        $prioridades = [
             ['nombre' => 'Alta'],
-            ['nombre' => 'Media'],
-            ['nombre' => 'Baja'],
-        ]);
+            ['nombre' => 'Mitjana'],
+            ['nombre' => 'Baixa'],
+        ];
+
+        foreach ($prioridades as $prioridad) {
+            Prioridad::create($prioridad);
+        }
     }
 }

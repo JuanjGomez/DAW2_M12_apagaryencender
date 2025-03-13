@@ -2,74 +2,61 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Sede;
 use Illuminate\Support\Facades\Hash;
 
 class UsersTableSeeder extends Seeder
 {
     public function run()
     {
-        // Administrador
+        $adminRole = Role::where('nombre', 'administrador')->first();
+        $clienteRole = Role::where('nombre', 'cliente')->first();
+        $gestorRole = Role::where('nombre', 'gestor')->first();
+        $tecnicoRole = Role::where('nombre', 'tecnico')->first();
+
+        $sedes = Sede::all();
+
+        // Crear un administrador
         User::create([
-            'name' => 'Administrador',
-            'email' => 'admin@empresa.com',
-            'password' => Hash::make('qweQWE123'),
-            'role_id' => 1,  // Administrador
-            'sede_id' => 1,  // Barcelona
-            'estado' => 'activo',
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'role_id' => $adminRole->id,
+            'sede_id' => $sedes->first()->id
         ]);
 
-        // Cliente Barcelona
-        User::create([
-            'name' => 'Cliente Barcelona',
-            'email' => 'cliente@empresa.com',
-            'password' => Hash::make('qweQWE123'),
-            'role_id' => 4,  // Cliente
-            'sede_id' => 1,  // Barcelona
-            'estado' => 'activo',
-        ]);
+        // Crear gestores para cada sede
+        foreach ($sedes as $sede) {
+            User::create([
+                'name' => 'Gestor ' . $sede->nombre,
+                'email' => 'gestor.' . strtolower($sede->nombre) . '@example.com',
+                'password' => Hash::make('password'),
+                'role_id' => $gestorRole->id,
+                'sede_id' => $sede->id
+            ]);
 
-        // Técnico Barcelona
-        User::create([
-            'name' => 'Tecnico Barcelona',
-            'email' => 'tecnico@empresa.com',
-            'password' => Hash::make('qweQWE123'),
-            'role_id' => 2,  // Técnico
-            'sede_id' => 1,  // Barcelona
-            'jefe_id' => 1,  // Jefe de Barcelona (Administrador)
-            'estado' => 'activo',
-        ]);
+            // Crear un técnico por sede
+            User::create([
+                'name' => 'Técnico ' . $sede->nombre,
+                'email' => 'tecnico.' . strtolower($sede->nombre) . '@example.com',
+                'password' => Hash::make('12345678'),  // Contraseña más simple para pruebas
+                'role_id' => $tecnicoRole->id,
+                'sede_id' => $sede->id
+            ]);
 
-        // Gestor Berlín
-        User::create([
-            'name' => 'Gestor Berlín',
-            'email' => 'gestor@empresa.com',
-            'password' => Hash::make('qweQWE123'),
-            'role_id' => 3,  // Gestor equipo
-            'sede_id' => 2,  // Berlín
-            'estado' => 'activo',
-        ]);
-
-        // Técnico Berlín
-        User::create([
-            'name' => 'Tecnico Berlín',
-            'email' => 'tecnico.berlin@empresa.com',
-            'password' => Hash::make('qweQWE123'),
-            'role_id' => 2,  // Técnico
-            'sede_id' => 2,  // Berlín
-            'jefe_id' => 4,  // Gestor de Berlín
-            'estado' => 'activo',
-        ]);
-
-        // Técnico Montreal
-        User::create([
-            'name' => 'Tecnico Montreal',
-            'email' => 'tecnico.montreal@empresa.com',
-            'password' => Hash::make('qweQWE123'),
-            'role_id' => 2,  // Técnico
-            'sede_id' => 3,  // Montreal
-            'estado' => 'activo',
-        ]);
+            // Crear 3 clientes por sede
+            for ($i = 1; $i <= 3; $i++) {
+                User::create([
+                    'name' => 'Cliente ' . $i . ' ' . $sede->nombre,
+                    'email' => 'cliente' . $i . '.' . strtolower($sede->nombre) . '@example.com',
+                    'password' => Hash::make('password'),
+                    'role_id' => $clienteRole->id,
+                    'sede_id' => $sede->id
+                ]);
+            }
+        }
     }
 }
