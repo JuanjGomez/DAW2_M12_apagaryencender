@@ -10,9 +10,14 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-100">
-    <div class="min-h-screen flex">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-blue-800 text-white">
+    <!-- Botón menú móvil -->
+    <button id="mobile-menu-button" class="md:hidden fixed top-4 left-4 z-50 bg-blue-800 text-white p-2 rounded-lg">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="min-h-screen flex flex-col md:flex-row">
+        <!-- Sidebar - oculto en móvil por defecto -->
+        <aside id="sidebar" class="transform -translate-x-full md:translate-x-0 fixed md:relative z-40 w-64 bg-blue-800 text-white h-full transition-transform duration-200 ease-in-out">
             <div class="p-4">
                 <h2 class="text-2xl font-semibold">Panel Técnico</h2>
                 <p class="text-sm text-blue-200">{{ Auth::user()->sede->nombre }}</p>
@@ -22,101 +27,104 @@
                     <i class="fas fa-clipboard-list mr-2"></i>Mis Incidencias
                 </a>
                 
-                <form action="{{ route('logout') }}" method="POST" class="w-full">
+                <form action="{{ route('logout') }}" method="POST" class="w-full mt-auto">
                     @csrf
                     <button type="submit" class="w-full flex items-center gap-2 p-4 hover:bg-blue-700 transition-colors">
                         <i class="fas fa-sign-out-alt text-red-500 text-xl"></i>
-                        <span class="text-red-500 text-xl">Cerrar sesión</span>
+                        <span class="text-red-500">Cerrar sesión</span>
                     </button>
                 </form>
             </nav>
         </aside>
 
         <!-- Contenido principal -->
-        <main class="flex-1 p-8">
-            <div class="flex justify-between items-center mb-8">
-                <h1 class="text-2xl font-bold">Mis Incidencias Asignadas</h1>
+        <main class="flex-1 p-4 md:p-8 w-full">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                <h1 class="text-xl md:text-2xl font-bold mb-4 md:mb-0">Mis Incidencias Asignadas</h1>
             </div>
 
             <!-- Filtros -->
             <div class="bg-white p-4 rounded-lg shadow mb-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <select name="prioridad" class="border rounded-lg px-3 py-2">
+                    <select name="prioridad" class="w-full border rounded-lg px-3 py-2">
                         <option value="">Todas las prioridades</option>
                         <option value="1">Urgente</option>
                         <option value="2">Alta</option>
                         <option value="3">Media</option>
                         <option value="4">Baja</option>
                     </select>
-                    <select name="estado" class="border rounded-lg px-3 py-2">
+                    <select name="estado" class="w-full border rounded-lg px-3 py-2">
                         <option value="">Todos los estados</option>
                         <option value="2">Asignada</option>
                         <option value="3">En trabajo</option>
                         <option value="4">Resuelta</option>
                     </select>
-                    <select name="orden" class="border rounded-lg px-3 py-2">
+                    <select name="orden" class="w-full border rounded-lg px-3 py-2">
                         <option value="desc">Más recientes primero</option>
                         <option value="asc">Más antiguas primero</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Tabla de incidencias -->
+            <!-- Tabla de incidencias con scroll horizontal en móvil -->
             <div class="bg-white rounded-lg shadow overflow-hidden">
-                <table class="min-w-full">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descripción</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prioridad</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @foreach(Auth::user()->incidenciasTecnico as $incidencia)
-                        <tr>
-                            <td class="px-6 py-4">#{{ $incidencia->id }}</td>
-                            <td class="px-6 py-4">{{ $incidencia->cliente->name }}</td>
-                            <td class="px-6 py-4">{{ Str::limit($incidencia->descripcion, 50) }}</td>
-                            <td class="px-6 py-4">
-                                <select class="border rounded px-2 py-1 text-sm"
-                                        onchange="actualizarEstado({{ $incidencia->id }}, this.value)">
-                                    <option value="2" {{ $incidencia->estado_id == 2 ? 'selected' : '' }}>Asignada</option>
-                                    <option value="3" {{ $incidencia->estado_id == 3 ? 'selected' : '' }}>En trabajo</option>
-                                    <option value="4" {{ $incidencia->estado_id == 4 ? 'selected' : '' }}>Resuelta</option>
-                                </select>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 rounded-full text-xs
-                                    {{ $incidencia->prioridad_id == 1 ? 'bg-red-100 text-red-800' : '' }}
-                                    {{ $incidencia->prioridad_id == 2 ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                    {{ $incidencia->prioridad_id == 3 ? 'bg-green-100 text-green-800' : '' }}">
-                                    {{ $incidencia->prioridad->nombre }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 space-x-2">
-                                <button class="text-blue-600 hover:text-blue-800"
-                                        onclick="verDetalles({{ $incidencia->id }})">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="text-green-600 hover:text-green-800"
-                                        onclick="window.location.href='{{ route('chat.show', ['incidencia' => $incidencia->id]) }}'">
-                                    <i class="fas fa-comments"></i> Chat
-                                </button>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                                <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
+                                <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Descripción</th>
+                                <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                                <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prioridad</th>
+                                <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @foreach(Auth::user()->incidenciasTecnico as $incidencia)
+                            <tr>
+                                <td class="px-4 md:px-6 py-4 text-sm">#{{ $incidencia->id }}</td>
+                                <td class="px-4 md:px-6 py-4 text-sm">{{ $incidencia->cliente->name }}</td>
+                                <td class="px-4 md:px-6 py-4 text-sm hidden md:table-cell">{{ Str::limit($incidencia->descripcion, 50) }}</td>
+                                <td class="px-4 md:px-6 py-4 text-sm">
+                                    <select class="w-full md:w-auto border rounded px-2 py-1 text-sm"
+                                            onchange="actualizarEstado({{ $incidencia->id }}, this.value)">
+                                        <option value="2" {{ $incidencia->estado_id == 2 ? 'selected' : '' }}>Asignada</option>
+                                        <option value="3" {{ $incidencia->estado_id == 3 ? 'selected' : '' }}>En trabajo</option>
+                                        <option value="4" {{ $incidencia->estado_id == 4 ? 'selected' : '' }}>Resuelta</option>
+                                    </select>
+                                </td>
+                                <td class="px-4 md:px-6 py-4 text-sm">
+                                    <span class="px-2 py-1 rounded-full text-xs whitespace-nowrap
+                                        {{ $incidencia->prioridad_id == 1 ? 'bg-red-100 text-red-800' : '' }}
+                                        {{ $incidencia->prioridad_id == 2 ? 'bg-yellow-100 text-yellow-800' : '' }}
+                                        {{ $incidencia->prioridad_id == 3 ? 'bg-blue-100 text-blue-800' : '' }}
+                                        {{ $incidencia->prioridad_id == 4 ? 'bg-green-100 text-green-800' : '' }}">
+                                        {{ $incidencia->prioridad->nombre }}
+                                    </span>
+                                </td>
+                                <td class="px-4 md:px-6 py-4 text-sm space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-800"
+                                            onclick="verDetalles({{ $incidencia->id }})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="text-green-600 hover:text-green-800"
+                                            onclick="window.location.href='{{ route('chat.show', ['incidencia' => $incidencia->id]) }}'">
+                                        <i class="fas fa-comments"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
     </div>
 
-    <!-- Modal de detalles -->
-    <div id="modalDetalles" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <!-- Modal de detalles - Responsive -->
+    <div id="modalDetalles" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-96 shadow-lg rounded-md bg-white">
             <div class="mt-3">
                 <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Ficha Técnica de Incidencia</h3>
                 <div class="space-y-3">
@@ -154,7 +162,7 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <button id="cerrarModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    <button id="cerrarModal" class="w-full md:w-auto bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                         Cerrar
                     </button>
                 </div>
@@ -165,6 +173,22 @@
     <script src="{{ asset('js/filtroTecnic.js') }}"></script>
 
     <script>
+    // Toggle menú móvil
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('-translate-x-full');
+    });
+
+    // Cerrar menú al hacer clic fuera en móvil
+    document.addEventListener('click', function(e) {
+        const sidebar = document.getElementById('sidebar');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        
+        if (!sidebar.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+            sidebar.classList.add('-translate-x-full');
+        }
+    });
+
     // Función para actualizar el estado
     function actualizarEstado(incidenciaId, nuevoEstado) {
         const form = document.createElement('form');
