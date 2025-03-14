@@ -41,19 +41,20 @@
             <!-- Filtros -->
             <div class="bg-white p-4 rounded-lg shadow mb-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <select class="border rounded-lg px-3 py-2">
+                    <select name="prioridad" class="border rounded-lg px-3 py-2">
                         <option value="">Todas las prioridades</option>
-                        <option value="alta">Alta</option>
-                        <option value="media">Media</option>
-                        <option value="baja">Baja</option>
+                        <option value="1">Urgente</option>
+                        <option value="2">Alta</option>
+                        <option value="3">Media</option>
+                        <option value="4">Baja</option>
                     </select>
-                    <select class="border rounded-lg px-3 py-2">
+                    <select name="estado" class="border rounded-lg px-3 py-2">
                         <option value="">Todos los estados</option>
-                        <option value="asignada">Asignada</option>
-                        <option value="en_trabajo">En trabajo</option>
-                        <option value="resuelta">Resuelta</option>
+                        <option value="2">Asignada</option>
+                        <option value="3">En trabajo</option>
+                        <option value="4">Resuelta</option>
                     </select>
-                    <select class="border rounded-lg px-3 py-2">
+                    <select name="orden" class="border rounded-lg px-3 py-2">
                         <option value="desc">Más recientes primero</option>
                         <option value="asc">Más antiguas primero</option>
                     </select>
@@ -160,6 +161,8 @@
             </div>
         </div>
     </div>
+
+    <script src="{{ asset('js/filtroTecnic.js') }}"></script>
 
     <script>
     // Función para actualizar el estado

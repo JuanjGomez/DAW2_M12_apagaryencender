@@ -84,3 +84,6 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/tecnico/incidencias/{incidencia}/detalles', [TecnicoController::class, 'obtenerDetalles'])->name('tecnico.incidencias.detalles');
 Route::post('/tecnico/incidencias/{incidencia}/actualizar-estado', [TecnicoController::class, 'actualizarEstado'])->name('tecnico.incidencias.actualizar-estado');
+
+Route::post('/tecnico/filtrar-incidencias', [TecnicoController::class, 'filtrarIncidencias'])
+    ->name('tecnico.filtrar-incidencias');
