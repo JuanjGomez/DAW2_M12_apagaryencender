@@ -21,9 +21,7 @@
                 <a href="#" class="block py-2.5 px-4 bg-blue-700">
                     <i class="fas fa-clipboard-list mr-2"></i>Mis Incidencias
                 </a>
-                <a href="#" class="block py-2.5 px-4 hover:bg-blue-700">
-                    <i class="fas fa-history mr-2"></i>Historial
-                </a>
+                
                 <form action="{{ route('logout') }}" method="POST" class="w-full">
                     @csrf
                     <button type="submit" class="w-full flex items-center gap-2 p-4 hover:bg-blue-700 transition-colors">
