@@ -147,7 +147,7 @@
                         <!-- Filtro por "resueltas" -->
                         <label class="inline-flex items-center">
                             <input type="checkbox" name="resueltas" value="no" @if(request('resueltas') == 'no') checked @endif>
-                            <span class="ml-2 text-sm">No mostrar incidencias resueltas</span>
+                            <span class="ml-2 text-sm">No mostrar incidencias devueltas</span>
                         </label>
 
                         <!-- Filtro de ordenación -->
