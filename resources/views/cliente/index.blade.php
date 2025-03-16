@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Sistema de Incidencias</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js" integrity="sha256-lCHT/LfuZjRp+PdpWns/vKrnSn367D/g1E6Ju18wiH0=" crossorigin="anonymous"></script>
 </head>
@@ -61,6 +62,70 @@
                     </p>
                 </div>
             </div>
+
+            <!-- Botón para abrir el modal -->
+            <div class="mt-6">
+                <button id="btnAbrirModal" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Crear nueva incidencia
+                </button>
+            </div>
+
+           <!-- Modal -->
+            <div id="modalCrearIncidencia" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+                    <h2 class="text-xl font-semibold mb-4">Crear Incidencia</h2>
+
+                    <!-- Formulario de creación -->
+                    <form id="formCrearIncidencia" enctype="multipart/form-data">
+                        @csrf
+
+                        <!-- Categoría -->
+                        <div class="mb-4">
+                            <label for="categoria_id" class="block text-gray-700">Categoría</label>
+                            <select name="categoria_id" id="categoria_id" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                                <option value="">Selecciona una categoría</option>
+                                @foreach ($categorias as $categoria)
+                                    <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                                @endforeach
+                            </select>
+                            <span class="text-red-500 hidden" id="errorCategoria"></span>
+                        </div>
+
+                        <!-- Subcategoría -->
+                        <div class="mb-4">
+                            <label for="subcategoria_id" class="block text-gray-700">Subcategoría</label>
+                            <select name="subcategoria_id" id="subcategoria_id" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                                <option value="">Selecciona una subcategoría</option>
+                                @foreach ($subcategorias as $subcategoria)
+                                    <option value="{{ $subcategoria->id }}">{{ $subcategoria->nombre }}</option>
+                                @endforeach
+                            </select>
+                            <span class="text-red-500 hidden" id="errorSubcategoria"></span>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="mb-4">
+                            <label for="descripcion" class="block text-gray-700">Descripción</label>
+                            <textarea name="descripcion" id="descripcion" rows="4" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"></textarea>
+                            <span class="text-red-500 hidden" id="errorDescripcion"></span>
+                        </div>
+
+                        <!-- Imagen -->
+                        <div class="mb-4">
+                            <label for="imagen" class="block text-gray-700">Adjuntar Imagen (Opcional)</label>
+                            <input type="file" name="imagen" id="imagen" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" id="btnCerrarModal" class="px-4 py-2 bg-gray-500 text-white rounded-lg">Cancelar</button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Crear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
 
             <!-- Filtros y tabla de incidencias -->
             <div class="bg-white p-6 mt-6 rounded-lg shadow">
@@ -132,13 +197,6 @@
                 </table>
             </div>
 
-            <!-- Botón para crear incidencia -->
-            <div class="mt-6">
-                <a href="{{ route('cliente.create') }}" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                    Crear nueva incidencia
-                </a>
-            </div>
-
             <!-- Lista de incidencias resueltas -->
             <div class="bg-white p-6 mt-6 rounded-lg shadow">
                 <h3 class="text-lg font-semibold mb-4">Incidencias Resueltas</h3>
@@ -185,6 +243,8 @@
         </main>
     </div>
 
+    <!-- Incluir el script -->
+    <script src="{{ asset('js/crearModalCliente.js') }}"></script>
     <script src="{{ asset('js/toolsDashboard.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 </body>
