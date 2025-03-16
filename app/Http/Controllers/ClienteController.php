@@ -23,7 +23,7 @@ public function store(Request $request)
         'categoria_id' => 'required|exists:categorias,id',
         'subcategoria_id' => 'required|exists:subcategorias,id',
         'descripcion' => 'required|string|max:255',
-        'imagen' => 'nullable|image',  // Si hay imagen, validar que sea una imagen
+        'imagen' => 'nullable|image|mimes:jpg,jpeg,png,gif',  // Validación de imagen
     ]);
 
     // Obtener el usuario autenticado (cliente)
@@ -32,8 +32,8 @@ public function store(Request $request)
     // Asignar un valor predeterminado para el estado y prioridad si no se envían
     $estado_id = 1;  // Supongamos que 1 es el estado predeterminado para nuevas incidencias
     $prioridad_id = $request->prioridad_id ?? null;  // Se puede dejar vacío si no se envía
-    $sede_id = auth()->user()->sede_id;  // Asumimos que el usuario tiene una relación con la sede
-
+    $sede_id = Auth::user()->sede_id;
+    
     // Crear la incidencia
     $incidencia = new Incidencia();
     $incidencia->cliente_id = $cliente_id;  // Asignamos el cliente autenticado
@@ -45,11 +45,21 @@ public function store(Request $request)
     $incidencia->sede_id = $sede_id;  // Asignamos la sede asociada al cliente
     $incidencia->descripcion = $request->descripcion;
 
-    // Subir la imagen si existe
+    // Subir imagen si se ha proporcionado
     if ($request->hasFile('imagen')) {
-        $path = $request->file('imagen')->store('incidencias', 'public');
-        $incidencia->imagen = $path;
+        // Obtener el archivo de la imagen
+        $imagen = $request->file('imagen');
+        
+        // Generar un nombre único para la imagen
+        $nombreImagen = time() . '-' . $imagen->getClientOriginalName();
+
+        // Mover la imagen a public/img/incidencias
+        $imagen->move(public_path('img/incidencias'), $nombreImagen);
+        
+        // Guardar la ruta relativa en la base de datos (por ejemplo: img/incidencias/imagen123.jpg)
+        $incidencia->imagen = 'img/incidencias/' . $nombreImagen;
     }
+
 
     // Guardar la incidencia
     $incidencia->save();
