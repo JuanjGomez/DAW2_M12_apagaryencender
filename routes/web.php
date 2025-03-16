@@ -57,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::patch('/incidencias/{id}/devolver', [ClienteController::class, 'devolver'])->name('incidencia.devolver');
 
+        Route::post('/cliente/filtrar', [ClienteController::class, 'filtrar'])->name('cliente.filtrar');
 
         
     // Rutas para gestor

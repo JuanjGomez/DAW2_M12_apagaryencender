@@ -95,6 +95,41 @@ public function store(Request $request)
         return view('cliente.index', compact('incidencias','incidenciasResueltas','categorias', 'subcategorias'));
     }
 
+    public function filtrar(Request $request)
+    {
+        // Obtener el cliente autenticado
+        $clienteId = Auth::id();
+
+        // Iniciar la consulta
+        $query = Incidencia::where('cliente_id', $clienteId);
+
+        // Filtrar por estado
+        if ($request->has('estado') && $request->estado) {
+            $query->where('estado_id', $request->estado);
+        }
+
+        // Filtrar por incidencias no resueltas
+        if ($request->has('resueltas') && $request->resueltas === 'no') {
+            $query->where('estado_id', '!=', 4); // Excluir incidencias resueltas
+        }
+
+        // Ordenar por fecha de creación
+        if ($request->has('orden')) {
+            $query->orderBy('fecha_creacion', $request->orden);
+        }
+
+        // Obtener las incidencias filtradas
+        $incidencias = $query->whereIn('estado_id', [1, 2, 3, 6])
+                            ->with(['estado', 'tecnico']) // Cargar relaciones
+                            ->get();
+
+        // Retornar la respuesta en formato JSON
+        return response()->json([
+            'success' => true,
+            'incidencias' => $incidencias,
+        ]);
+    }
+
         // Método para cerrar una incidencia
         public function cerrar(Incidencia $incidencia)
         {

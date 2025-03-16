@@ -131,31 +131,33 @@
             <div class="bg-white p-6 mt-6 rounded-lg shadow">
                 <h3 class="text-lg font-semibold mb-4">Mis Incidencias</h3>
 
-                <!-- Filtros -->
-                <form method="GET" action="{{ route('cliente.index') }}" class="mb-4">
+                <form method="GET" action="{{ route('cliente.index') }}" class="mb-4" id="form-filtros">
+                    <!-- Filtros -->
                     <div class="flex flex-wrap gap-4">
                         <!-- Filtro por estado -->
-                        <select name="estado" class="form-select border-gray-300 rounded-md" onchange="this.form.submit()">
+                        <select name="estado" class="form-select border-gray-300 rounded-md">
                             <option value="">Filtrar por estado</option>
                             <option value="1" @if(request('estado_id') == '1') selected @endif>Sin asignar</option>
                             <option value="2" @if(request('estado_id') == '2') selected @endif>Activo</option>
                             <option value="3" @if(request('estado_id') == '3') selected @endif>Inactivo</option>
                             <option value="4" @if(request('estado_id') == '4') selected @endif>Pendiente</option>
+                            <option value="6" @if(request('estado_id') == '6') selected @endif>Devuelta</option>
                         </select>
 
                         <!-- Filtro por "resueltas" -->
                         <label class="inline-flex items-center">
-                            <input type="checkbox" name="resueltas" value="no" onchange="this.form.submit()" @if(request('resueltas') == 'no') checked @endif>
+                            <input type="checkbox" name="resueltas" value="no" @if(request('resueltas') == 'no') checked @endif>
                             <span class="ml-2 text-sm">No mostrar incidencias resueltas</span>
                         </label>
 
                         <!-- Filtro de ordenación -->
-                        <select name="orden" class="form-select border-gray-300 rounded-md" onchange="this.form.submit()">
+                        <select name="orden" class="form-select border-gray-300 rounded-md">
                             <option value="asc" @if(request('orden') == 'asc') selected @endif>Orden Ascendente</option>
                             <option value="desc" @if(request('orden') == 'desc') selected @endif>Orden Descendente</option>
                         </select>
                     </div>
                 </form>
+
 
                 <!-- Tabla de incidencias -->
                 <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
@@ -252,6 +254,7 @@
     </div>
 
     <script src="{{ asset('js/crearModalCliente.js') }}"></script>
+    <script src="{{ asset('js/filtrosCliente.js') }}"></script>
     <script src="{{ asset('js/toolsDashboard.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 </body>
