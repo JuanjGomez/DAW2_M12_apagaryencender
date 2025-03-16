@@ -79,23 +79,8 @@ public function store(Request $request)
         // Empezamos la consulta filtrando por el cliente autenticado
         $query = Incidencia::where('cliente_id', Auth::id());
     
-        // Filtro por estado (usando estado_id)
-        if ($request->has('estado') && in_array($request->estado, [1, 2, 3])) { // Suponiendo que los estados tienen ID: 1 = activo, 2 = inactivo, 3 = pendiente
-            $query->where('estado_id', $request->estado);
-        }
-    
-        // Filtro por incidencias no resueltas (excluir las resueltas)
-        if ($request->has('resueltas') && $request->resueltas == 'no') {
-            $query->whereNull('fecha_resolucion');
-        }
-    
-        // Filtro de ordenación por fecha de creación
-        if ($request->has('orden')) {
-            $query->orderBy('fecha_creacion', $request->orden);
-        }
-    
         // Obtener las incidencias filtradas por los criterios anteriores
-        $incidencias = $query->whereIn('estado_id', [1, 2, 3])
+        $incidencias = $query->whereIn('estado_id', [1, 2, 3,6])
                             ->get();
 
         // Obtener solo las incidencias resueltas (estado_id == 4)
@@ -153,6 +138,19 @@ public function store(Request $request)
 
     // Pasar los datos a la vista
     return view('cliente.chat', compact('incidencia', 'chat', 'mensajes'));
+}
+
+public function devolver($id)
+{
+    // Buscar la incidencia por su ID
+    $incidencia = Incidencia::findOrFail($id);
+
+    // Cambiar el estado de la incidencia a "Devuelta"
+    $incidencia->estado_id = 6;
+    $incidencia->save();
+
+    // Redirigir con un mensaje de éxito
+    return redirect()->route('cliente.index')->with('success', 'Incidencia devuelta con éxito');
 }
 
 }

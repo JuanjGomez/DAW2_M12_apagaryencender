@@ -55,6 +55,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/incidencias', [ClienteController::class, 'store'])->name('cliente.store');
 
+        Route::patch('/incidencias/{id}/devolver', [ClienteController::class, 'devolver'])->name('incidencia.devolver');
+
+
         
     // Rutas para gestor
     Route::get('/gestor', function () {

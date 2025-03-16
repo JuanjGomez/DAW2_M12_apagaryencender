@@ -42,7 +42,7 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold mb-2">Mis Incidencias</h3>
                     <p class="text-3xl font-bold text-blue-600">
-                    {{ Auth::user()->incidenciasCliente->whereIn('estado_id', [1, 2, 3, 4])->count() }}
+                    {{ Auth::user()->incidenciasCliente->whereIn('estado_id', [1, 2, 3, 4,6])->count() }}
                     </p>
                 </div>
 
@@ -50,7 +50,7 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold mb-2">Incidencias Pendientes</h3>
                     <p class="text-3xl font-bold text-yellow-600">
-                        {{ Auth::user()->incidenciasCliente->whereIn('estado_id', [1, 2, 3])->count() }}
+                        {{ Auth::user()->incidenciasCliente->whereIn('estado_id', [1, 2, 3,6])->count() }}
                     </p>
                 </div>
 
@@ -234,6 +234,14 @@
                                         <i class="fas fa-check-circle"></i> Cerrar
                                     </button>
                                 </form>
+                                <!-- Botón de devolver incidencia -->
+                                <form method="POST" action="{{ route('incidencia.devolver', $incidencia->id) }}" class="inline-block">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="inline-block px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700">
+                                        <i class="fas fa-undo"></i> Devolver
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach
@@ -243,7 +251,6 @@
         </main>
     </div>
 
-    <!-- Incluir el script -->
     <script src="{{ asset('js/crearModalCliente.js') }}"></script>
     <script src="{{ asset('js/toolsDashboard.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
