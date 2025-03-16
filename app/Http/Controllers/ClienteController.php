@@ -110,7 +110,7 @@ public function store(Request $request)
 
         // Filtrar por incidencias no resueltas
         if ($request->has('resueltas') && $request->resueltas === 'no') {
-            $query->where('estado_id', '!=', 4); // Excluir incidencias resueltas
+            $query->where('estado_id', '!=', 4);
         }
 
         // Ordenar por fecha de creación
