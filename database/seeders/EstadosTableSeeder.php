@@ -15,6 +15,7 @@ class EstadosTableSeeder extends Seeder
             ['nombre' => 'En trabajo'],
             ['nombre' => 'Resuelta'],
             ['nombre' => 'Cerrada'],
+            ['nombre' => 'Devuelta'],
         ]);
     }
 }
