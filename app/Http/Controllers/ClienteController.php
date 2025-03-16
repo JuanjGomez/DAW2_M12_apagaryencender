@@ -188,4 +188,14 @@ public function devolver($id)
     return redirect()->route('cliente.index')->with('success', 'Incidencia devuelta con éxito');
 }
 
+public function getSubcategorias($categoriaId)
+{
+    $subcategorias = Subcategoria::where('categoria_id', $categoriaId)->get();
+
+    return response()->json([
+        'subcategorias' => $subcategorias
+    ]);
+}
+
+
 }

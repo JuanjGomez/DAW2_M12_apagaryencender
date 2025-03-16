@@ -95,14 +95,13 @@
                         <!-- Subcategoría -->
                         <div class="mb-4">
                             <label for="subcategoria_id" class="block text-gray-700">Subcategoría</label>
-                            <select name="subcategoria_id" id="subcategoria_id" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                            <select name="subcategoria_id" id="subcategoria_id" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" disabled>
                                 <option value="">Selecciona una subcategoría</option>
-                                @foreach ($subcategorias as $subcategoria)
-                                    <option value="{{ $subcategoria->id }}">{{ $subcategoria->nombre }}</option>
-                                @endforeach
+                                <!-- Las subcategorías se llenarán dinámicamente -->
                             </select>
                             <span class="text-red-500 hidden" id="errorSubcategoria"></span>
                         </div>
+
 
                         <!-- Descripción -->
                         <div class="mb-4">

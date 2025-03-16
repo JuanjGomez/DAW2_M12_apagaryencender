@@ -9,6 +9,46 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('modalCrearIncidencia').classList.add('hidden');
     });
 
+    // Desbloquear el select de subcategorías cuando se seleccione una categoría
+    document.getElementById('categoria_id').addEventListener('change', function () {
+        const categoriaId = this.value;
+        const subcategoriaSelect = document.getElementById('subcategoria_id');
+
+        // Si hay una categoría seleccionada, desbloqueamos el select de subcategorías
+        if (categoriaId) {
+            subcategoriaSelect.disabled = false;
+            cargarSubcategorias(categoriaId); // Cargamos las subcategorías correspondientes
+        } else {
+            subcategoriaSelect.disabled = true; // Si no hay categoría seleccionada, bloqueamos el select
+            subcategoriaSelect.innerHTML = '<option value="">Selecciona una subcategoría</option>'; // Limpiamos las opciones de subcategorías
+        }
+    });
+
+    // Función para cargar las subcategorías
+    function cargarSubcategorias(categoriaId) {
+        const subcategoriaSelect = document.getElementById('subcategoria_id');
+
+        // Limpiar las opciones previas
+        subcategoriaSelect.innerHTML = '<option value="">Selecciona una subcategoría</option>';
+
+        // Aquí realizamos una solicitud AJAX para obtener las subcategorías de la categoría seleccionada
+        fetch(`/subcategorias/${categoriaId}`) // Asumiendo que tu ruta es algo así
+            .then(response => response.json())
+            .then(data => {
+                // Si obtenemos las subcategorías correctamente
+                data.subcategorias.forEach(subcategoria => {
+                    const option = document.createElement('option');
+                    option.value = subcategoria.id;
+                    option.textContent = subcategoria.nombre;
+                    subcategoriaSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar las subcategorías:', error);
+                Swal.fire('Error', 'Hubo un problema al cargar las subcategorías.', 'error');
+            });
+    }
+
     // Enviar el formulario para crear la incidencia
     document.getElementById('formCrearIncidencia').addEventListener('submit', function (event) {
         event.preventDefault();

@@ -7,6 +7,7 @@ use App\Http\Controllers\ChatController;
 use App\Models\User;
 use App\Models\Incidencia;
 use App\Models\Mensaje;
+use App\Models\Subcategoria;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -59,6 +60,11 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/cliente/filtrar', [ClienteController::class, 'filtrar'])->name('cliente.filtrar');
 
+        Route::get('/subcategorias/{categoriaId}', function ($categoriaId) {
+            $subcategorias = Subcategoria::where('categoria_id', $categoriaId)->get();
+            return response()->json(['subcategorias' => $subcategorias]);
+        });
+        
         
     // Rutas para gestor
     Route::get('/gestor', function () {
