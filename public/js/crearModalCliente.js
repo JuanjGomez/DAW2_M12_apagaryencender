@@ -38,11 +38,15 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                Swal.fire('Creado', 'La incidencia se ha creado con éxito.', 'success');
+                Swal.fire('Creado', 'La incidencia se ha creado con éxito.', 'success')
+                    .then(() => {
+                        // Limpiar el formulario y cerrar el modal
+                        document.getElementById('formCrearIncidencia').reset();
+                        document.getElementById('modalCrearIncidencia').classList.add('hidden');
 
-                // Limpiar el formulario y cerrar el modal
-                document.getElementById('formCrearIncidencia').reset();
-                document.getElementById('modalCrearIncidencia').classList.add('hidden');
+                        // Recargar la página después de un segundo
+                        window.location.reload();
+                    });
             }
         })
         .catch(error => {
