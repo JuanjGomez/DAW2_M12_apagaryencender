@@ -14,16 +14,16 @@
         <!-- Navbar -->
         <nav class="bg-white shadow-lg">
             <div class="max-w-7xl mx-auto px-4">
-                <div class="flex justify-between h-16">
-                    <div class="flex items-center">
-                        <img src="{{ asset('img/adje.png') }}" alt="Logo" class="h-10 mr-4">
+                <div class="flex justify-between items-center h-16 flex-wrap">
+                    <div class="flex items-center space-x-4">
+                        <img src="{{ asset('img/adje.png') }}" alt="Logo" class="h-10">
                         <h1 class="text-xl font-bold">Sistema de Incidencias</h1>
                     </div>
-                    <div class="flex items-center">
-                        <span class="text-gray-700 mr-4">Bienvenido, {{ Auth::user()->name }}</span>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-700 text-sm">Bienvenido, {{ Auth::user()->name }}</span>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="text-red-600 hover:text-red-800">
+                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm">
                                 <i class="fas fa-sign-out-alt mr-2"></i>Cerrar sesión
                             </button>
                         </form>
@@ -32,17 +32,18 @@
             </div>
         </nav>
 
+
         <!-- Contenido principal -->
         <main class="max-w-7xl mx-auto py-6 px-4">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Panel de Control</h2>
 
             <!-- Estadísticas -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Mis Incidencias -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold mb-2">Mis Incidencias</h3>
                     <p class="text-3xl font-bold text-blue-600">
-                    {{ Auth::user()->incidenciasCliente->whereIn('estado_id', [1, 2, 3, 4,6])->count() }}
+                        {{ Auth::user()->incidenciasCliente->whereIn('estado_id', [1, 2, 3, 4,6])->count() }}
                     </p>
                 </div>
 
@@ -125,8 +126,6 @@
                 </div>
             </div>
 
-
-
             <!-- Filtros y tabla de incidencias -->
             <div class="bg-white p-6 mt-6 rounded-lg shadow">
                 <h3 class="text-lg font-semibold mb-4">Mis Incidencias</h3>
@@ -158,97 +157,100 @@
                     </div>
                 </form>
 
-
                 <!-- Tabla de incidencias -->
-                <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="py-2 px-4 text-left">Descripción</th>
-                            <th class="py-2 px-4 text-left">Estado</th>
-                            <th class="py-2 px-4 text-left">Técnico</th>
-                            <th class="py-2 px-4 text-left">Fecha de Creación</th>
-                            <th class="py-2 px-4 text-left">Fecha de Resolución</th>
-                            <th class="py-2 px-4 text-left">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($incidencias as $incidencia)
-                        <tr class="border-t border-gray-200">
-                            <td class="py-2 px-4">{{ $incidencia->descripcion }}</td>
-                            <td class="py-2 px-4">{{ $incidencia->estado->nombre }}</td>
-                            <td class="py-2 px-4">
-                                {{ $incidencia->tecnico ? $incidencia->tecnico->name : 'No asignado' }}
-                            </td>
-                            <td class="py-2 px-4">{{ $incidencia->fecha_creacion }}</td>
-                            <td class="py-2 px-4">
-                                {{ $incidencia->fecha_resolucion ?? 'Aún no resuelta' }}
-                            </td>
-                            <td class="py-2 px-4 flex gap-2">
-                                <!-- Botón de chat -->
-                                <a href="{{ route('chat.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                                    <i class="fas fa-comments"></i> Chat
-                                </a>
-                                <!-- Botón de ver detalles -->
-                                <a href="{{ route('cliente.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                    Ver detalles
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="py-2 px-4 text-left">Descripción</th>
+                                <th class="py-2 px-4 text-left">Estado</th>
+                                <th class="py-2 px-4 text-left">Técnico</th>
+                                <th class="py-2 px-4 text-left">Fecha de Creación</th>
+                                <th class="py-2 px-4 text-left">Fecha de Resolución</th>
+                                <th class="py-2 px-4 text-left">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($incidencias as $incidencia)
+                            <tr class="border-t border-gray-200">
+                                <td class="py-2 px-4">{{ $incidencia->descripcion }}</td>
+                                <td class="py-2 px-4">{{ $incidencia->estado->nombre }}</td>
+                                <td class="py-2 px-4">
+                                    {{ $incidencia->tecnico ? $incidencia->tecnico->name : 'No asignado' }}
+                                </td>
+                                <td class="py-2 px-4">{{ $incidencia->fecha_creacion }}</td>
+                                <td class="py-2 px-4">
+                                    {{ $incidencia->fecha_resolucion ?? 'Aún no resuelta' }}
+                                </td>
+                                <td class="py-2 px-4 flex gap-2">
+                                    <!-- Botón de chat -->
+                                    <a href="{{ route('chat.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                                        <i class="fas fa-comments"></i> Chat
+                                    </a>
+                                    <!-- Botón de ver detalles -->
+                                    <a href="{{ route('cliente.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                        Ver detalles
+                                    </a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Lista de incidencias resueltas -->
             <div class="bg-white p-6 mt-6 rounded-lg shadow">
                 <h3 class="text-lg font-semibold mb-4">Incidencias Resueltas</h3>
-                <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="py-2 px-4 text-left">Descripción</th>
-                            <th class="py-2 px-4 text-left">Estado</th>
-                            <th class="py-2 px-4 text-left">Técnico</th>
-                            <th class="py-2 px-4 text-left">Fecha de Resolución</th>
-                            <th class="py-2 px-4 text-left">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($incidenciasResueltas as $incidencia)
-                        <tr class="border-t border-gray-200">
-                            <td class="py-2 px-4">{{ $incidencia->descripcion }}</td>
-                            <td class="py-2 px-4">{{ $incidencia->estado->nombre }}</td>
-                            <td class="py-2 px-4">{{ $incidencia->tecnico->name }}</td>
-                            <td class="py-2 px-4">{{ $incidencia->fecha_resolucion }}</td>
-                            <td class="py-2 px-4 flex gap-2">
-                                <!-- Botón de chat -->
-                                <a href="{{ route('chat.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                                    <i class="fas fa-comments"></i> Chat
-                                </a>
-                                <!-- Botón de ver detalles -->
-                                <a href="{{ route('cliente.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                    Ver detalles
-                                </a>
-                                <!-- Botón de cerrar incidencia -->
-                                <form method="POST" action="{{ route('incidencia.cerrar', $incidencia->id) }}" class="inline-block">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-                                        <i class="fas fa-check-circle"></i> Cerrar
-                                    </button>
-                                </form>
-                                <!-- Botón de devolver incidencia -->
-                                <form method="POST" action="{{ route('incidencia.devolver', $incidencia->id) }}" class="inline-block">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="inline-block px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700">
-                                        <i class="fas fa-undo"></i> Devolver
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="py-2 px-4 text-left">Descripción</th>
+                                <th class="py-2 px-4 text-left">Estado</th>
+                                <th class="py-2 px-4 text-left">Técnico</th>
+                                <th class="py-2 px-4 text-left">Fecha de Resolución</th>
+                                <th class="py-2 px-4 text-left">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($incidenciasResueltas as $incidencia)
+                            <tr class="border-t border-gray-200">
+                                <td class="py-2 px-4">{{ $incidencia->descripcion }}</td>
+                                <td class="py-2 px-4">{{ $incidencia->estado->nombre }}</td>
+                                <td class="py-2 px-4">{{ $incidencia->tecnico->name }}</td>
+                                <td class="py-2 px-4">{{ $incidencia->fecha_resolucion }}</td>
+                                <td class="py-2 px-4 flex gap-2">
+                                    <!-- Botón de chat -->
+                                    <a href="{{ route('chat.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                                        <i class="fas fa-comments"></i> Chat
+                                    </a>
+                                    <!-- Botón de ver detalles -->
+                                    <a href="{{ route('cliente.show', $incidencia->id) }}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                        Ver detalles
+                                    </a>
+                                    <!-- Botón de cerrar incidencia -->
+                                    <form method="POST" action="{{ route('incidencia.cerrar', $incidencia->id) }}" class="inline-block">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                                            <i class="fas fa-check-circle"></i> Cerrar
+                                        </button>
+                                    </form>
+                                    <!-- Botón de devolver incidencia -->
+                                    <form method="POST" action="{{ route('incidencia.devolver', $incidencia->id) }}" class="inline-block">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="inline-block px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700">
+                                            <i class="fas fa-undo"></i> Devolver
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
     </div>
