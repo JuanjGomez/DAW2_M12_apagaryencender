@@ -60,6 +60,16 @@ class AdminController extends Controller
     public function storeUser(Request $request)
     {
         try {
+            // Primero verificamos si ya existe un usuario en esa sede
+            $existingUser = User::where('sede_id', $request->sede_id)->first();
+
+            if ($existingUser) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => 'Ya existe un usuario asignado a esta sede'
+                ], 422);
+            }
+
             $validated = $request->validate([
                 'name' => 'required|string|max:30',
                 'email' => 'required|email|unique:users',
@@ -98,6 +108,20 @@ class AdminController extends Controller
     public function updateUser(Request $request, $id)
     {
         try {
+            // Verificamos si ya existe un usuario en esa sede, excluyendo el usuario actual
+            $existingUser = User::where('sede_id', $request->sede_id)
+                               ->where('id', '!=', $id)
+                               ->first();
+
+            if ($existingUser) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => [
+                        'sede_id' => ['Ya existe un usuario asignado a esta sede']
+                    ]
+                ], 422);
+            }
+
             $validated = $request->validate([
                 'name' => 'required|string|max:30',
                 'email' => 'required|email|unique:users,email,' . $id,
@@ -122,7 +146,7 @@ class AdminController extends Controller
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error de validacion',
+                'message' => 'Error de validación',
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {

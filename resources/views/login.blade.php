@@ -14,14 +14,15 @@
 <body class="min-h-screen flex items-center justify-center p-4"
     data-validation-errors="{{ $errors->first() }}"
     data-error="{{ session('error') }}">
-    <div class="flex w-full max-w-5xl container-shadow rounded-3xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
-        <!-- Imagen izquierda -->
-        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-purple-600 items-center justify-center p-12 relative overflow-hidden">
+    <div class="flex flex-col lg:flex-row w-full max-w-5xl container-shadow rounded-3xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
+        <!-- Imagen - visible arriba en móvil -->
+        <div class="flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-purple-600 items-center justify-center p-8 lg:p-12 relative overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-blue-600/50 to-purple-600/50 backdrop-blur-sm"></div>
-            <img src="{{ asset('img/adje.png') }}" alt="Soporte Técnico" class="w-4/5 max-w-md relative z-10 hover:scale-105 transition-transform duration-300 drop-shadow-2xl">
+            <img src="{{ asset('img/adje.png') }}" alt="Soporte Técnico"
+                 class="w-40 lg:w-4/5 max-w-md relative z-10 hover:scale-105 transition-transform duration-300 drop-shadow-2xl">
         </div>
 
-        <!-- Formulario derecho -->
+        <!-- Formulario -->
         <div class="w-full lg:w-1/2 glass-effect p-8 lg:p-12">
             <div class="text-center mb-10">
                 <h2 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3 tracking-tight">¡Bienvenido!</h2>

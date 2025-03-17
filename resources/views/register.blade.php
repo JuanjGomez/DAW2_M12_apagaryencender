@@ -14,8 +14,17 @@
     data-validation-errors="{{ $errors->first() }}"
     data-email-duplicado="{{ session('emailDuplicado') }}"
     data-error="{{ session('error') }}">
-    <div class="flex w-full max-w-4xl container-shadow rounded-3xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
-        <!-- Formulario izquierdo con padding reducido -->
+
+    <!-- Contenedor principal con flex-col en móvil -->
+    <div class="flex flex-col lg:flex-row w-full max-w-4xl container-shadow rounded-3xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
+        <!-- Imagen - visible arriba en móvil -->
+        <div class="flex lg:w-1/2 bg-gradient-to-bl from-purple-600 to-blue-600 items-center justify-center p-8 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-bl from-purple-600/50 to-blue-600/50 backdrop-blur-sm"></div>
+            <img src="{{ asset('img/adje.png') }}" alt="Soporte Técnico"
+                 class="w-40 lg:w-3/4 max-w-md relative z-10 hover:scale-105 transition-transform duration-300 drop-shadow-2xl">
+        </div>
+
+        <!-- Formulario -->
         <div class="w-full lg:w-1/2 glass-effect p-6 lg:p-8">
             <div class="text-center mb-6">
                 <h2 class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2 tracking-tight">¡Regístrate!</h2>
@@ -141,12 +150,6 @@
                     </p>
                 </div>
             </form>
-        </div>
-
-        <!-- Imagen derecha con padding reducido -->
-        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-bl from-purple-600 to-blue-600 items-center justify-center p-8 relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-bl from-purple-600/50 to-blue-600/50 backdrop-blur-sm"></div>
-            <img src="{{ asset('img/adje.png') }}" alt="Soporte Técnico" class="w-3/4 max-w-md relative z-10 hover:scale-105 transition-transform duration-300 drop-shadow-2xl">
         </div>
     </div>
 

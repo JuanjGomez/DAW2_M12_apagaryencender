@@ -10,9 +10,7 @@ body {
 }
 
 .container-shadow {
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.2),
-                0 0 100px rgba(103, 126, 234, 0.3),
-                0 0 150px rgba(118, 75, 162, 0.2);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
 }
 
 .input-focus:focus {
@@ -81,5 +79,21 @@ body {
 
     .mb-6 {
         margin-bottom: 1.5rem !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .container-shadow {
+        flex-direction: column;
+        max-height: none;
+        margin: 1rem;
+    }
+
+    .bg-gradient-to-br {
+        padding: 2rem;
+    }
+
+    .glass-effect {
+        padding: 2rem;
     }
 }
