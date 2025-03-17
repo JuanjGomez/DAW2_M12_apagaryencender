@@ -12,24 +12,41 @@ use App\Models\Sede;
 
 class IncidenciasTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        // Obtener datos necesarios
-        $clientes = User::whereHas('role', function($query) {
-            $query->where('nombre', 'cliente');
-        })->get();
+        // Incidencia 1: Cliente Barcelona (Software)
+        DB::table('incidencias')->insert([
+            'cliente_id' => 2, // Cliente Barcelona
+            'tecnico_id' => 3, // Técnico Barcelona
+            'categoria_id' => 1, // Software
+            'subcategoria_id' => 1, // Aplicación gestión administrativa
+            'estado_id' => 4, // Sin asignar
+            'prioridad_id' => 4, // Baja
+            'sede_id' => 1, // Barcelona
+            'descripcion' => 'La aplicación de gestión administrativa no responde al intentar abrirla.',
+            'resolucion' => 'Estamos a tope, nos ha ido bien',
+            'imagen' => null,
+            'fecha_creacion' => Carbon::now(),
+            'fecha_resolucion' => Carbon::now(),
+            'chat_id' => null,
+        ]);
 
-        $tecnicos = User::whereHas('role', function($query) {
-            $query->where('nombre', 'tecnico');
-        })->get();
-
-        $categorias = Categoria::all();
-        $estados = Estado::all();
-        $prioridades = Prioridad::all();
-        $sedes = Sede::all();
+        // Incidencia 2: Cliente Berlín (Hardware)
+        DB::table('incidencias')->insert([
+            'cliente_id' => 4, // Cliente Berlín
+            'tecnico_id' => 5, // Técnico Berlín
+            'categoria_id' => 2, // Hardware
+            'subcategoria_id' => 2, // El ratolí no funciona
+            'estado_id' => 2, // Asignada
+            'prioridad_id' => 2, // Alta
+            'sede_id' => 2, // Berlín
+            'descripcion' => 'El ratón de mi computadora no responde, necesito asistencia urgente.',
+            'resolucion' => null,
+            'imagen' => null,
+            'fecha_creacion' => Carbon::now(),
+            'fecha_resolucion' => null,
+            'chat_id' => null,
+        ]);
 
         // Crear 20 incidencias de prueba
         for ($i = 0; $i < 20; $i++) {

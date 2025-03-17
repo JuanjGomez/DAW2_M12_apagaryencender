@@ -9,16 +9,13 @@ class EstadosTableSeeder extends Seeder
 {
     public function run()
     {
-        $estados = [
-            ['nombre' => 'Sense assignar'],
-            ['nombre' => 'Assignada'],
-            ['nombre' => 'En treball'],
-            ['nombre' => 'Resolta'],
-            ['nombre' => 'Tancada'],
-        ];
-
-        foreach ($estados as $estado) {
-            Estado::create($estado);
-        }
+        DB::table('estados')->insert([
+            ['nombre' => 'Sin asignar'],
+            ['nombre' => 'Asignada'],
+            ['nombre' => 'En trabajo'],
+            ['nombre' => 'Resuelta'],
+            ['nombre' => 'Cerrada'],
+            ['nombre' => 'Devuelta'],
+        ]);
     }
 }

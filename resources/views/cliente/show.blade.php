@@ -11,16 +11,16 @@
     <!-- Navbar -->
     <nav class="bg-white shadow-lg">
             <div class="max-w-7xl mx-auto px-4">
-                <div class="flex justify-between h-16">
-                    <div class="flex items-center">
-                        <img src="{{ asset('img/adje.png') }}" alt="Logo" class="h-10 mr-4">
+                <div class="flex justify-between items-center h-16 flex-wrap">
+                    <div class="flex items-center space-x-4">
+                        <img src="{{ asset('img/adje.png') }}" alt="Logo" class="h-10">
                         <h1 class="text-xl font-bold">Sistema de Incidencias</h1>
                     </div>
-                    <div class="flex items-center">
-                        <span class="text-gray-700 mr-4">Bienvenido, {{ Auth::user()->name }}</span>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-700 text-sm">Bienvenido, {{ Auth::user()->name }}</span>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="text-red-600 hover:text-red-800">
+                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm">
                                 <i class="fas fa-sign-out-alt mr-2"></i>Cerrar sesión
                             </button>
                         </form>

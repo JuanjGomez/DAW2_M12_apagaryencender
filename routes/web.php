@@ -9,6 +9,7 @@ use App\Http\Controllers\TecnicoController;
 use App\Models\User;
 use App\Models\Incidencia;
 use App\Models\Mensaje;
+use App\Models\Subcategoria;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\GestorController;
 
