@@ -20,54 +20,67 @@ class TecnicoController extends Controller
         return view('tecnico.index', compact('incidencias'));
     }
 
-    public function cambiarEstado(Request $request, Incidencia $incidencia)
+    public function obtenerDetalles(Incidencia $incidencia)
     {
-        $request->validate([
+        // Verificar que la incidencia pertenece al técnico actual
+        if ($incidencia->tecnico_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('tecnico.detalles-incidencia', [
+            'incidencia' => $incidencia->load(['cliente', 'categoria', 'subcategoria', 'estado', 'prioridad'])
+        ]);
+    }
+
+    public function actualizarEstado(Request $request, Incidencia $incidencia)
+    {
+        // Verificar que la incidencia pertenece al técnico actual
+        if ($incidencia->tecnico_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
             'estado_id' => 'required|exists:estados,id'
         ]);
 
-        // Verificar que el técnico es el asignado a la incidencia
-        if ($incidencia->tecnico_id !== Auth::id()) {
-            return back()->with('error', 'No tienes permiso para modificar esta incidencia');
-        }
-
-        $incidencia->estado_id = $request->estado_id;
-        
-        // Si el estado es "Resolta", actualizar fecha_resolucion
-        if ($request->estado_id == Estado::where('nombre', 'Resolta')->first()->id) {
-            $incidencia->fecha_resolucion = now();
-        }
-
-        $incidencia->save();
-
-        return back()->with('success', 'Estado de la incidencia actualizado correctamente');
-    }
-
-    public function mostrarIncidencia(Incidencia $incidencia)
-    {
-        // Verificar que el técnico es el asignado a la incidencia
-        if ($incidencia->tecnico_id !== Auth::id()) {
-            return back()->with('error', 'No tienes permiso para ver esta incidencia');
-        }
-
-        $estados = Estado::all();
-        return view('tecnico.detalle', compact('incidencia', 'estados'));
-    }
-
-    public function actualizarResolucion(Request $request, Incidencia $incidencia)
-    {
-        $request->validate([
-            'resolucion' => 'required|string'
+        $incidencia->update([
+            'estado_id' => $validated['estado_id']
         ]);
 
-        // Verificar que el técnico es el asignado a la incidencia
-        if ($incidencia->tecnico_id !== Auth::id()) {
-            return back()->with('error', 'No tienes permiso para modificar esta incidencia');
+        return redirect()->back()->with('success', 'Estado actualizado correctamente');
+    }
+
+    public function filtrarIncidencias(Request $request)
+    {
+        try {
+            $query = Auth::user()->incidenciasTecnico()
+                ->with(['cliente', 'categoria', 'subcategoria', 'estado', 'prioridad']);
+
+            // Filtro por prioridad
+            if ($request->filled('prioridad')) {
+                $query->where('prioridad_id', $request->prioridad);
+            }
+
+            // Filtro por estado
+            if ($request->filled('estado')) {
+                $query->where('estado_id', $request->estado);
+            }
+
+            // Ordenar por fecha
+            $orden = $request->orden === 'asc' ? 'asc' : 'desc';
+            $query->orderBy('fecha_creacion', $orden);
+
+            $incidencias = $query->get();
+
+            return response()->json([
+                'success' => true,
+                'incidencias' => $incidencias
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al filtrar las incidencias: ' . $e->getMessage()
+            ], 500);
         }
-
-        $incidencia->resolucion = $request->resolucion;
-        $incidencia->save();
-
-        return back()->with('success', 'Resolución actualizada correctamente');
     }
 }
