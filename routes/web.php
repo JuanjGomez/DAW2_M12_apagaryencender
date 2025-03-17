@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ChatController;
 use App\Models\User;
@@ -9,6 +10,7 @@ use App\Models\Incidencia;
 use App\Models\Mensaje;
 use App\Models\Subcategoria;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\GestorController;
 
 
 // Rutas de acceso abierto -----------------------------------------------------------------------------------------------
@@ -29,10 +31,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Rutas securizadas ------------------------------------------------------------------------------------------------------
 Route::middleware(['auth'])->group(function () {
     // Rutas para administrador
-    Route::get('/admin', function () {
-        $users = User::with(['role', 'sede'])->get();
-        return view('admin.index', compact('users'));
-    })->name('admin.index');
+    Route::get('/admin', [AdminController::class, 'indexUsers'])->name('admin.index');
+    Route::post('/admin/createUsers', [AdminController::class, 'storeUser'])->name('admin.store');
+    Route::put('/admin/updateUsers/{id}', [AdminController::class, 'updateUser'])->name('admin.update');
+    Route::delete('/admin/deleteUsers/{id}', [AdminController::class, 'destroyUser'])->name('admin.destroy');
 
     // Rutas para cliente
     Route::get('/cliente', function () {
@@ -67,10 +69,16 @@ Route::middleware(['auth'])->group(function () {
         
         
     // Rutas para gestor
-    Route::get('/gestor', function () {
-        $incidencias = Auth::user()->sede->incidencias;
-        return view('gestor.index', compact('incidencias'));
-    })->name('gestor.index');
+    Route::middleware(['auth'])->prefix('gestor')->name('gestor.')->group(function () {
+        Route::get('/', [GestorController::class, 'index'])->name('index');
+        Route::get('/incidencia/{id}', [GestorController::class, 'show'])->name('show');
+        Route::post('/incidencia/{id}/asignar-tecnico', [GestorController::class, 'asignarTecnico'])->name('asignar.tecnico');
+        Route::post('/incidencia/{id}/actualizar-prioridad', [GestorController::class, 'actualizarPrioridad'])->name('actualizar.prioridad');
+        Route::get('/incidencias-por-tecnico', [GestorController::class, 'incidenciasPorTecnico'])->name('incidencias.tecnico');
+        Route::post('/filtrar', [GestorController::class, 'filtrarIncidencias'])->name('filtrar');
+        Route::post('/incidencias-tecnico/filtrar', [GestorController::class, 'filtrarIncidenciasPorTecnico'])
+             ->name('incidencias-tecnico.filtrar');
+    });
 
     // Rutas para técnico
     Route::get('/tecnico', function () {
