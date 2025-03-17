@@ -1,4 +1,5 @@
-<div class="bg-white rounded-lg shadow">
+<!-- Vista de tabla para desktop -->
+<div class="hidden sm:block bg-white rounded-lg shadow">
     <table class="min-w-full">
         <thead class="bg-gray-50">
             <tr>
@@ -38,14 +39,10 @@
                             @endforeach
                         </div>
                     </td>
-                    <td class="px-6 py-4 text-sm">
+                    <td class="px-8 py-6 text-sm">
                         <button onclick="openEditModal({{ $categoria->load('subcategorias')->toJson() }})"
                             class="text-blue-600 hover:text-blue-900 mr-3">
                             <i class="fas fa-edit"></i>
-                        </button>
-                        <button onclick="deleteCategoria({{ $categoria->id }})"
-                                class="text-red-600 hover:text-red-900">
-                            <i class="fas fa-trash"></i>
                         </button>
                     </td>
                 </tr>
@@ -57,6 +54,50 @@
     <div class="px-6 py-4 border-t">
         {!! $categoriasFiltradas->links() !!}
     </div>
+</div>
+
+<!-- Vista de cards para móvil -->
+<div class="sm:hidden space-y-4">
+    @foreach($categoriasFiltradas as $categoria)
+    <div class="bg-white rounded-lg shadow-sm p-4">
+        <!-- Header con ID y estado -->
+        <div class="flex justify-between items-start mb-2">
+            <div>
+                <span class="text-lg font-semibold">#{{ $categoria->id }}</span>
+                <p class="text-gray-600">{{ $categoria->nombre }}</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-xs bg-purple-100 text-purple-800">
+                Activa
+            </span>
+        </div>
+
+        <!-- Subcategorías -->
+        <div class="mt-4">
+            <div class="text-sm text-gray-500">Subcategorías:</div>
+            <div class="flex flex-wrap gap-2 mt-2">
+                @foreach($categoria->subcategorias as $subcategoria)
+                    <span class="inline-block px-3 py-1 rounded-full text-sm
+                        @if($loop->iteration % 4 == 1) bg-blue-100 text-blue-800
+                        @elseif($loop->iteration % 4 == 2) bg-cyan-100 text-cyan-800
+                        @elseif($loop->iteration % 4 == 3) bg-green-100 text-green-800
+                        @else bg-amber-100 text-amber-800
+                        @endif">
+                        {{ $subcategoria->nombre }}
+                    </span>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="mt-4 flex justify-end gap-4">
+            <button onclick="openEditModal({{ $categoria->load('subcategorias')->toJson() }})"
+                    class="text-blue-600 flex items-center">
+                <i class="fas fa-edit mr-1"></i>
+                <span>Editar</span>
+            </button>
+        </div>
+    </div>
+    @endforeach
 </div>
 
 <!-- Loading spinner -->

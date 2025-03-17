@@ -35,6 +35,8 @@ function refreshTable() {
     .catch(error => {
         console.error('Error:', error)
         document.getElementById('loadingSpinner').classList.add('hidden')
+    }).finally(() => {
+        document.getElementById('loadingSpinner').classList.add('hidden')
     })
 }
 
@@ -84,21 +86,8 @@ function inicializarCategoriaModa() {
         newSubcategoria.className = 'flex items-center gap-2 mb-2'
         newSubcategoria.innerHTML = `
             <input type="text" name="subcategorias[]" class="shadow appearance-none border rounded flex-1 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            <button type="button" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 deleteSubcategoria">
-                <i class="fas fa-times"></i>
-            </button>
         `
         container.appendChild(newSubcategoria)
-    })
-
-    // Eliminar subcategoría
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('.deleteSubcategoria')) {
-            const subcategoriaDiv = e.target.closest('.flex');
-            if (document.querySelectorAll('[name="subcategorias[]"]').length > 1) {
-                subcategoriaDiv.remove()
-            }
-        }
     })
 
     // Manejar el envío del formulario
@@ -149,9 +138,6 @@ function resetForm() {
     container.innerHTML = `
         <div class="flex items-center gap-2 mb-2">
             <input type="text" name="subcategorias[]" class="shadow appearance-none border rounded flex-1 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            <button type="button" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 deleteSubcategoria">
-                <i class="fas fa-times"></i>
-            </button>
         </div>
     `
 }
@@ -184,9 +170,6 @@ function openEditModal(categoria) {
                        name="subcategorias[]"
                        value="${subcategoria.nombre}"
                        class="shadow appearance-none border rounded flex-1 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <button type="button" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 deleteSubcategoria">
-                    <i class="fas fa-times"></i>
-                </button>
             `
             container.appendChild(div)
         })
@@ -206,9 +189,6 @@ function addSubcategoriaToEdit(container, subcategoria) {
                 name="subcategorias[]"
                 value="${subcategoria ? subcategoria.nombre : ''}"
                 class="shadow appearance-none border rounded flex-1 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-        <button type="button" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 deleteSubcategoria">
-            <i class="fas fa-times"></i>
-        </button>
     `
     container.appendChild(div)
 }

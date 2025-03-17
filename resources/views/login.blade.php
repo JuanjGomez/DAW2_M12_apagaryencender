@@ -85,8 +85,8 @@
                             Recordar sesión
                         </label>
                     </div>
-                    <a href="#" class="text-blue-600 hover:text-blue-500">
-                        ¿Olvidaste tu contraseña?
+                    <a href="{{ asset('register') }}" class="text-blue-600 hover:text-blue-500">
+                        Registrarse
                     </a>
                 </div>
             </form>

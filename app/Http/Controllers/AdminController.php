@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Sede;
@@ -83,7 +84,6 @@ class AdminController extends Controller
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al crear el usuario',
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
@@ -134,13 +134,14 @@ class AdminController extends Controller
         }
     }
 
-    public function destroyUser($id) {
+    public function destroyUser($id)
+    {
         try {
             DB::beginTransaction();
 
             $user = User::findOrFail($id);
 
-            // Verificar si no es el ultimo administrador
+            // Verificar si no es el último administrador
             if ($user->role->nombre === 'administrador') {
                 $adminCount = User::whereHas('role', function($query) {
                     $query->where('nombre', 'administrador');
@@ -154,33 +155,43 @@ class AdminController extends Controller
                 }
             }
 
-            // Eliminar registros relacionados
-            // Eliminar mensajes del usuario
+            // Verificar si el usuario tiene incidencias asociadas
+            $hasIncidencias = Incidencia::where('cliente_id', $id)
+                ->orWhere('tecnico_id', $id)
+                ->exists();
+
+            if ($hasIncidencias) {
+                // Actualizar las incidencias en lugar de eliminarlas
+                Incidencia::where('cliente_id', $id)->update(['cliente_id' => null]);
+                Incidencia::where('tecnico_id', $id)->update(['tecnico_id' => null]);
+            }
+
+            // Eliminar mensajes asociados
             Mensaje::where('usuario_id', $id)->delete();
 
-            // Eliminar chats del usuario
-            Chat::where('usuario_id', $id)->delete();
-
-            // En lugar de eliminar las incidencias, se actualiza a null
-            Incidencia::where('cliente_id', $id)
-                ->update(['cliente_id' => null]);
-            Incidencia::where('tecnico_id', $id)
-                ->update(['tecnico_id' => null]);
-
-            // Eliminar usuario
-            User::findOrFail($id)->delete();
+            // Finalmente eliminar el usuario
+            $user->delete();
 
             DB::commit();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Usuario eliminado exitosamente'
             ]);
 
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar el usuario',
-                'error' => $e->getMessage()
+                'message' => 'Usuario no encontrado'
+            ], 404);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Error al eliminar usuario: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el usuario: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -274,11 +285,6 @@ class AdminController extends Controller
 
             // Obtener IDs de subcategorías existentes
             $existingIds = $request->subcategoria_ids ?? [];
-
-            // Eliminar subcategorías que no están en el formulario
-            $categoria->subcategorias()
-                ->WhereNotIn('id', array_filter($existingIds))
-                ->delete();
 
             // Actualizar o crear subcategorías
             foreach ($validated['subcategorias'] as $index => $nombre) {

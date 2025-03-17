@@ -11,77 +11,101 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="bg-gray-100">
-    <div class="min-h-screen flex">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-blue-800 text-white">
-            <div class="p-4">
-                <h2 class="text-2xl font-semibold">Panel Admin</h2>
+    <div class="min-h-screen flex flex-col sm:flex-row">
+        <!-- Sidebar como columna -->
+        <aside class="bg-blue-800 text-white">
+            <!-- Header del panel -->
+            <div class="p-4 border-b border-blue-700">
+                <h2 class="text-2xl font-semibold">Panel Administrador</h2>
+                <p class="text-sm text-blue-200">{{ Auth::user()->sede->nombre }}</p>
             </div>
-            <nav class="mt-4">
-                <a href="{{ route('admin.index') }}" class="block py-2.5 px-4 hover:bg-blue-700">
-                    <i class="fas fa-users mr-2"></i>Gestión Usuarios
+
+            <!-- Menú en columna -->
+            <nav class="flex flex-col">
+                <a href="{{ route('admin.index') }}"class="flex items-center px-4 py-3 bg-blue-900">
+                    <i class="fas fa-clipboard-list mr-3 w-6"></i>
+                    <span>Gestión de Usuarios</span>
                 </a>
-                <a href="{{ route('admin.categorias') }}" class="block py-2.5 px-4 hover:bg-blue-700">
-                    <i class="fas fa-tasks mr-2"></i>Tipos de Incidencias
+
+                <a href="{{ route('admin.categorias') }}"class="flex items-center px-4 py-3 hover:bg-blue-700">
+                    <i class="fas fa-tasks mr-3 w-6"></i>
+                    <span>Tipos de Incidencias</span>
                 </a>
-                <a href="#" class="block py-2.5 px-4 hover:bg-blue-700">
-                    <i class="fas fa-building mr-2"></i>Sedes
+
+                <!-- Botón cerrar sesión -->
+                <a href="{{ route('logout') }}"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                   class="flex items-center px-4 py-3 text-red-500 mt-auto">
+                    <i class="fas fa-sign-out-alt mr-3 w-6"></i>
+                    <span>Cerrar sesión</span>
                 </a>
-                <form action="{{ route('logout') }}" method="POST" class="w-full">
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                     @csrf
-                    <button type="submit" class="w-full flex items-center gap-2 p-4 hover:bg-blue-700 transition-colors">
-                        <i class="fas fa-sign-out-alt text-red-500 text-xl"></i>
-                        <span class="text-red-500 text-xl">Cerrar sesión</span>
-                    </button>
                 </form>
             </nav>
         </aside>
 
         <!-- Contenido principal -->
-        <main class="flex-1 p-8">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main class="flex-1 p-4">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header con título y botón -->
                 <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-2xl font-bold text-gray-900">Gestión de Usuarios</h1>
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Gestión de Usuarios</h1>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg"
                             id="openCreateModal">
                         + Nuevo Usuario
                     </button>
                 </div>
 
-                <!-- Filtros -->
-                <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <select id="sedeFilter" class="rounded-lg border-gray-300">
-                        <option value="">Todas las sedes</option>
-                        @foreach($sedes as $sede)
-                            <option value="{{ $sede->id }}" {{ request('sede') == $sede->id ? 'selected' : '' }}>
-                                {{ $sede->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
+                <!-- Filtros - grid en móvil, flex en desktop -->
+                <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                    <div class="grid grid-cols-1 sm:flex sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
+                        <!-- Select de sedes -->
+                        <div class="relative sm:w-1/4">
+                            <select id="sedeFilter"
+                                    class="w-full p-4 sm:p-2 rounded-lg border border-gray-200 bg-white appearance-none text-gray-700">
+                                <option value="">Todas las sedes</option>
+                                @foreach($sedes as $sede)
+                                    <option value="{{ $sede->id }}">{{ $sede->nombre }}</option>
+                                @endforeach
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <i class="fas fa-chevron-down text-gray-400"></i>
+                            </div>
+                        </div>
 
-                    <select id="roleFilter" class="rounded-lg border-gray-300">
-                        <option value="">Todos los roles</option>
-                        @foreach($roles as $role)
-                            <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>
-                                {{ $role->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
+                        <!-- Select de roles -->
+                        <div class="relative sm:w-1/4">
+                            <select id="roleFilter"
+                                    class="w-full p-4 sm:p-2 rounded-lg border border-gray-200 bg-white appearance-none text-gray-700">
+                                <option value="">Todos los roles</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id }}">{{ $role->nombre }}</option>
+                                @endforeach
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <i class="fas fa-chevron-down text-gray-400"></i>
+                            </div>
+                        </div>
 
-                    <input type="text"
-                           id="searchInput"
-                           class="rounded-lg border-gray-300"
-                           placeholder="Buscar usuario name o email..."
-                           value="{{ request('search') }}">
+                        <!-- Barra de búsqueda -->
+                        <div class="sm:flex-1">
+                            <input type="text"
+                                id="searchInput"
+                                class="w-full p-4 sm:p-2 rounded-lg border border-gray-200 bg-white text-gray-700 placeholder-gray-400"
+                                placeholder="Buscar usuario name o email...">
+                        </div>
 
-                    <button id="clearFilters"
-                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-times mr-2"></i>
-                        Borrar filtros
-                    </button>
+                        <!-- Botón borrar filtros -->
+                        <button id="clearFilters"
+                                class="w-full sm:w-auto p-4 sm:p-2 rounded-lg bg-red-500 hover:bg-red-600 text-white flex items-center justify-center gap-2 sm:whitespace-nowrap">
+                            <i class="fas fa-times"></i>
+                            <span>Borrar filtros</span>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Contenedor de la tabla -->
+                <!-- Lista de usuarios -->
                 <div id="usersTable">
                     @include('admin.users_list')
                 </div>
