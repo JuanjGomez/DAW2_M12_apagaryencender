@@ -11,25 +11,40 @@ class User extends Authenticatable {
 
     protected $table = 'users';
 
-    protected $fillable = ['name', 'email', 'password', 'role_id', 'jefe_id', 'sede_id'];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role_id',
+        'sede_id'
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
     // Relación con el rol del usuario (administrador, cliente, técnico, etc.)
     public function role() {
         return $this->belongsTo(Role::class);
     }
 
-    // Relación con las incidencias del cliente (un usuario cliente puede tener muchas incidencias)
+    // Relación con las incidencias del cliente
     public function incidenciasCliente() {
         return $this->hasMany(Incidencia::class, 'cliente_id');
     }
 
-    // Relación con las incidencias del técnico (un técnico puede tener muchas incidencias)
-    public function incidenciasTecnico()
-    {
+    // Relación con las incidencias del técnico
+    public function incidenciasTecnico() {
         return $this->hasMany(Incidencia::class, 'tecnico_id');
     }
 
-    // Relación uno a muchos con la sede (un usuario tiene una sede)
+    // Relación con la sede
     public function sede() {
         return $this->belongsTo(Sede::class);
     }
