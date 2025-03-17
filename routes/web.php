@@ -5,7 +5,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\TecnicoController;
 use App\Models\User;
 use App\Models\Incidencia;
 use App\Models\Mensaje;
@@ -51,12 +50,6 @@ Route::middleware(['auth'])->group(function () {
         // Ruta para mostrar las incidencias del cliente
         Route::get('/cliente', [ClienteController::class, 'index'])->name('cliente.index');
 
-        // Ruta para mostrar el formulario de creación de incidencia
-        Route::get('/cliente/create', [ClienteController::class, 'create'])->name('cliente.create');
-
-        // Ruta para almacenar la incidencia creada
-        Route::post('/cliente', [ClienteController::class, 'store'])->name('cliente.store');
-
         // Ruta para ver los detalles de una incidencia
         Route::get('/cliente/{id}', [ClienteController::class, 'show'])->name('cliente.show');
 
@@ -69,7 +62,16 @@ Route::middleware(['auth'])->group(function () {
         // Ruta para almacenar un mensaje en el chat
         Route::post('/chat/{incidencia}/store', [ChatController::class, 'store'])->name('chat.store');
 
+        Route::post('/incidencias', [ClienteController::class, 'store'])->name('cliente.store');
 
+        Route::patch('/incidencias/{id}/devolver', [ClienteController::class, 'devolver'])->name('incidencia.devolver');
+
+        Route::post('/cliente/filtrar', [ClienteController::class, 'filtrar'])->name('cliente.filtrar');
+
+        Route::get('/subcategorias/{categoriaId}', function ($categoriaId) {
+            $subcategorias = Subcategoria::where('categoria_id', $categoriaId)->get();
+            return response()->json(['subcategorias' => $subcategorias]);
+        });
 
     // Rutas para gestor
     Route::middleware(['auth'])->prefix('gestor')->name('gestor.')->group(function () {

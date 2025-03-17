@@ -13,13 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-<<<<<<< HEAD
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-=======
         $this->call([
             RolesTableSeeder::class,
             SedesTableSeeder::class,
@@ -29,7 +22,6 @@ class DatabaseSeeder extends Seeder
             PrioridadesTableSeeder::class,
             UsersTableSeeder::class,
             IncidenciasTableSeeder::class,
->>>>>>> 86cc8e26541607363638230a2487de04c9cd2ce8
         ]);
     }
 }

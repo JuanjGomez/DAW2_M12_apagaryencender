@@ -3,19 +3,15 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Categoria;
+use Illuminate\Support\Facades\DB;
 
 class CategoriasTableSeeder extends Seeder
 {
     public function run()
     {
-        $categorias = [
+        DB::table('categorias')->insert([
             ['nombre' => 'Software'],
             ['nombre' => 'Hardware'],
-        ];
-
-        foreach ($categorias as $categoria) {
-            Categoria::create($categoria);
-        }
+        ]);
     }
 }
