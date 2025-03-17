@@ -12,7 +12,6 @@ use App\Models\Mensaje;
 use App\Models\Subcategoria;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\GestorController;
-use App\Http\Controllers\TecnicoController;
 
 
 // Rutas de acceso abierto -----------------------------------------------------------------------------------------------
