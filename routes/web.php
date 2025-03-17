@@ -30,11 +30,16 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Rutas securizadas ------------------------------------------------------------------------------------------------------
 Route::middleware(['auth'])->group(function () {
-    // Rutas para administrador
+    // Rutas para administrador | Gestion de usuarios
     Route::get('/admin', [AdminController::class, 'indexUsers'])->name('admin.index');
     Route::post('/admin/createUsers', [AdminController::class, 'storeUser'])->name('admin.store');
     Route::put('/admin/updateUsers/{id}', [AdminController::class, 'updateUser'])->name('admin.update');
     Route::delete('/admin/deleteUsers/{id}', [AdminController::class, 'destroyUser'])->name('admin.destroy');
+    // | Gestion de categorias de incidencias
+    Route::get('/admin/categorias', [AdminController::class, 'indexCategorias'])->name('admin.categorias');
+    Route::post('/admin/createCategorias', [AdminController::class, 'storeCategorias'])->name('admin.storeCategorias');
+    Route::put('/admin/categorias/{id}', [AdminController::class, 'updateCategorias'])->name('admin.updateCategorias');
+    Route::delete('/admin/deleteCategorias/{id}', [AdminController::class, 'destroyCategorias'])->name('admin.destroyCategorias');
 
     // Rutas para cliente
     Route::get('/cliente', function () {
@@ -43,6 +48,12 @@ Route::middleware(['auth'])->group(function () {
 
         // Ruta para mostrar las incidencias del cliente
         Route::get('/cliente', [ClienteController::class, 'index'])->name('cliente.index');
+
+        // Ruta para mostrar el formulario de creación de incidencia
+        Route::get('/cliente/create', [ClienteController::class, 'create'])->name('cliente.create');
+
+        // Ruta para almacenar la incidencia creada
+        Route::post('/cliente', [ClienteController::class, 'store'])->name('cliente.store');
 
         // Ruta para ver los detalles de una incidencia
         Route::get('/cliente/{id}', [ClienteController::class, 'show'])->name('cliente.show');
@@ -55,6 +66,8 @@ Route::middleware(['auth'])->group(function () {
 
         // Ruta para almacenar un mensaje en el chat
         Route::post('/chat/{incidencia}/store', [ChatController::class, 'store'])->name('chat.store');
+
+
 
         Route::post('/incidencias', [ClienteController::class, 'store'])->name('cliente.store');
 
