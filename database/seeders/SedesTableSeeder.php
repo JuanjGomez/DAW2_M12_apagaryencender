@@ -3,32 +3,35 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Sede;
 
 class SedesTableSeeder extends Seeder
 {
     public function run()
     {
-        // Crear sedes
-        DB::table('sedes')->insert([
+        $sedes = [
             [
                 'nombre' => 'Barcelona',
-                'direccion' => 'Carrer de la Pau, 23',
+                'direccion' => 'Carrer de Balmes, 123',
                 'ciudad' => 'Barcelona',
                 'pais' => 'España'
             ],
             [
                 'nombre' => 'Berlín',
-                'direccion' => 'Kaiserstraße 12',
-                'ciudad' => 'Berlín',
+                'direccion' => 'Friedrichstraße 123',
+                'ciudad' => 'Berlin',
                 'pais' => 'Alemania'
             ],
             [
                 'nombre' => 'Montreal',
-                'direccion' => 'Rue Saint-Denis, 45',
+                'direccion' => '1234 Rue Sainte-Catherine O',
                 'ciudad' => 'Montreal',
                 'pais' => 'Canadá'
             ],
-        ]);
+        ];
+
+        foreach ($sedes as $sede) {
+            Sede::create($sede);
+        }
     }
 }
