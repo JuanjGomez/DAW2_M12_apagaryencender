@@ -21,7 +21,10 @@ class DatabaseSeeder extends Seeder
             EstadosTableSeeder::class,
             PrioridadesTableSeeder::class,
             UsersTableSeeder::class,
+            ChatsTableSeeder::class,
             IncidenciasTableSeeder::class,
+            MensajesTableSeeder::class,
+            AdjuntosTableSeeder::class,
         ]);
     }
 }

@@ -86,8 +86,8 @@
                             Recordar sesión
                         </label>
                     </div>
-                    <a href="{{ asset('register') }}" class="text-blue-600 hover:text-blue-500">
-                        Registrarse
+                    <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-500">
+                        ¿No tienes cuenta? Registrate
                     </a>
                 </div>
             </form>
