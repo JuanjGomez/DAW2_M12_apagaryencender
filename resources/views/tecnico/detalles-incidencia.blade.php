@@ -86,7 +86,7 @@
                             </div>
                             <div>
                                 <label class="text-sm font-medium text-gray-700">Prioridad</label>
-                                <p class="mt-1">{{ $incidencia->prioridad->nombre }}</p>
+                                <p class="mt-1">{{ $incidencia->prioridad ? $incidencia->prioridad->nombre : 'Sin prioridad' }}</p>
                             </div>
                         </div>
                     </div>

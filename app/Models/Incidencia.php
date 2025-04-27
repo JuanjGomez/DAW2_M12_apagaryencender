@@ -44,4 +44,11 @@ class Incidencia extends Model {
         return $this->hasOne(Chat::class);
     }
     
+    /**
+     * Obtener los adjuntos relacionados con esta incidencia
+     */
+    public function adjuntos()
+    {
+        return $this->morphMany(Adjunto::class, 'adjuntable');
+    }
 }
