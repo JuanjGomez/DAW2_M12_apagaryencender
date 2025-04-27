@@ -85,8 +85,8 @@
                             Recordar sesión
                         </label>
                     </div>
-                    <a href="#" class="text-blue-600 hover:text-blue-500">
-                        ¿Olvidaste tu contraseña?
+                    <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-500">
+                        ¿No tienes cuenta?
                     </a>
                 </div>
             </form>
