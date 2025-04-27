@@ -60,14 +60,18 @@ class AdminController extends Controller
     public function storeUser(Request $request)
     {
         try {
-            // Primero verificamos si ya existe un usuario en esa sede
-            $existingUser = User::where('sede_id', $request->sede_id)->first();
+            // Solo aplicar la restricción si el rol es "gestor equipo" (role_id == 3)
+            if ($request->role_id == 3) {
+                $existingUser = User::where('sede_id', $request->sede_id)
+                                    ->where('role_id', 3)
+                                    ->first();
 
-            if ($existingUser) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => 'Ya existe un usuario asignado a esta sede'
-                ], 422);
+                if ($existingUser) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => 'Ya existe un gestor de equipo asignado a esta sede'
+                    ], 422);
+                }
             }
 
             $validated = $request->validate([
@@ -109,17 +113,20 @@ class AdminController extends Controller
     {
         try {
             // Verificamos si ya existe un usuario en esa sede, excluyendo el usuario actual
-            $existingUser = User::where('sede_id', $request->sede_id)
-                               ->where('id', '!=', $id)
-                               ->first();
+            if ($request->role_id == 3) {
+                $existingUser = User::where('sede_id', $request->sede_id)
+                                    ->where('role_id', 3)
+                                    ->where('id', '!=', $id)
+                                    ->first();
 
-            if ($existingUser) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => [
-                        'sede_id' => ['Ya existe un usuario asignado a esta sede']
-                    ]
-                ], 422);
+                if ($existingUser) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => [
+                            'sede_id' => ['Ya existe un gestor de equipo asignado a esta sede']
+                        ]
+                    ], 422);
+                }
             }
 
             $validated = $request->validate([
@@ -212,7 +219,7 @@ class AdminController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Error al eliminar usuario: ' . $e->getMessage());
+            Log::error('Error al eliminar usuario: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Error al eliminar el usuario: ' . $e->getMessage()

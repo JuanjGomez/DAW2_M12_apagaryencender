@@ -95,7 +95,7 @@ class AuthController extends Controller
             Auth::login($usuario);
             session()->flash('loginSuccess', "¡Bienvenido $username!");
             DB::commit();
-            return redirect()->route('dashboard');
+            return redirect()->route('cliente.index');
 
         } catch (\Exception $e) {
             DB::rollBack();

@@ -271,6 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const userId = document.getElementById('editUserId').value
         const formData = new FormData(this)
+        formData.append('_method', 'PUT')
 
         // Mostrar spinner o indicador de carga
         document.getElementById('loadingSpinner').classList.remove('hidden')
@@ -278,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`/admin/updateUsers/${userId}`, {
             method: 'POST',
             headers: {
-                'X-Requested-With': document.querySelector('meta[name="csrf-token"]').content,
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                 'Accept': 'application/json'
             },
             body: formData
